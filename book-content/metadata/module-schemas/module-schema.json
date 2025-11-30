@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Module Metadata Schema",
+  "description": "Schema for validating module _index.json metadata.",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "order",
+    "description"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the module (e.g., module-1-ros2)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the module (e.g., 'Robotic Nervous System')"
+    },
+    "order": {
+      "type": "integer",
+      "description": "Sequential order of modules in the book"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short summary of the module"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of general prerequisites for the module"
+    },
+    "learningObjectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of learning objectives for the module"
+    }
+  },
+  "additionalProperties": false
+}

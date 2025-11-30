@@ -1,0 +1,101 @@
+---
+id: "chapter-1-cognitive-planning"
+title: "Cognitive Planning for Autonomous Robots"
+module: "module-4-vision-language-action"
+order: 1
+difficulty: "advanced"
+prerequisites: ["chapter-2-vslam-navigation"]
+tags: ["Cognitive AI", "Planning", "Robotics", "Action Systems"]
+personalizationFlags: {}
+languageVariants: ["en"]
+assetReferences: []
+authors: ["Gemini Agent"]
+version: "0.1.0"
+lastUpdated: "2025-11-30"
+---
+
+# Cognitive Planning for Autonomous Robots
+
+## Introduction
+
+Cognitive planning equips autonomous robots with the ability to reason, anticipate, and make decisions in complex, dynamic environments. This chapter delves into the principles of cognitive planning, exploring how robots can generate high-level strategies, adapt to unforeseen circumstances, and execute sequences of actions to achieve goals that integrate vision, language, and physical interaction.
+
+## Theory
+
+**Cognitive Planning** for robots involves several key areas:
+
+*   **Knowledge Representation**: How robots understand and store information about their environment, capabilities, and goals (e.g., using ontologies, semantic maps).
+*   **Reasoning and Inference**: Logical deduction and probabilistic inference to interpret sensory data and predict outcomes.
+*   **Task Planning**: Generating a sequence of actions from a high-level goal, often involving symbolic AI techniques or hierarchical task networks.
+*   **Execution Monitoring and Re-planning**: Observing the results of actions, detecting failures, and adapting the plan as needed.
+*   **Human-Robot Interaction**: Incorporating natural language instructions and feedback into the planning loop.
+
+The integration of Vision-Language Models (VLMs) is increasingly central, allowing robots to understand commands given in natural language and perceive the world through visual cues, translating these into actionable plans.
+
+## Code Examples
+
+### High-Level Planning with PDDL (Conceptual)
+
+Planning Domain Definition Language (PDDL) is a common way to describe planning problems. Here's a conceptual example of a simple domain and problem.
+
+```pddl
+; book-content/shared/code-snippets/pddl-domain-conceptual.pddl
+; Domain Definition
+(define (domain robot_manipulation)
+  (:requirements :strips :typing)
+  (:types object gripper)
+  (:predicates
+    (at ?o - object ?loc)
+    (holding ?g - gripper ?o - object)
+    (empty ?g - gripper)
+  )
+
+  (:action pick
+    :parameters (?g - gripper ?o - object ?loc)
+    :precondition (and (at ?o ?loc) (empty ?g))
+    :effect (and (not (at ?o ?loc)) (not (empty ?g)) (holding ?g ?o))
+  )
+
+  (:action place
+    :parameters (?g - gripper ?o - object ?loc)
+    :precondition (and (holding ?g ?o) (not (at ?o ?loc)))
+    :effect (and (at ?o ?loc) (empty ?g) (not (holding ?g ?o)))
+  )
+)
+
+; Problem Definition
+(define (problem pick_and_place)
+  (:domain robot_manipulation)
+  (:objects
+    block1 block2 - object
+    left_gripper right_gripper - gripper
+    table shelf - location
+  )
+  (:init
+    (at block1 table)
+    (at block2 shelf)
+    (empty left_gripper)
+    (empty right_gripper)
+  )
+  (:goal (and (at block1 shelf) (at block2 table)))
+)
+```
+
+## Simulation Exercises
+
+### Exercise 1: Simulate a Simple Pick-and-Place Task with Planning
+
+**Objective**: To conceptually understand how a robot might execute a high-level pick-and-place task using planning.
+
+**Steps**:
+
+1.  Consider a simulated environment (e.g., in Isaac Sim) with a robot arm, a table, a shelf, and two blocks.
+2.  Define the initial state (e.g., Block A on Table, Block B on Shelf).
+3.  Define the goal state (e.g., Block A on Shelf, Block B on Table).
+4.  Mentally (or with a simple planner) generate a sequence of `pick` and `place` actions that achieve the goal.
+
+**Expected Outcome**: A clear, sequential plan of actions (e.g., pick Block A from Table, place Block A on Shelf, pick Block B from Shelf, place Block B on Table) that transforms the initial state into the goal state.
+
+## Summary
+
+This chapter introduced the fascinating field of cognitive planning for autonomous robots, outlining how reasoning, knowledge representation, and task planning enable intelligent behavior. We explored conceptual examples of high-level planning using PDDL. As robots become more sophisticated, their ability to plan and adapt will be paramount, leading directly into the integration of Vision-Language Models for natural interaction, which will be covered in the next chapter.

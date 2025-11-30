@@ -1,0 +1,12 @@
+{
+  "id": "module-1-robotic-nervous-system",
+  "title": "Robotic Nervous System",
+  "order": 1,
+  "description": "Foundational concepts for building and understanding robotic nervous systems, focusing on ROS 2 and URDF.",
+  "prerequisites": ["Basic Python Programming", "Linear Algebra"],
+  "learningObjectives": [
+    "Understand ROS 2 core concepts (nodes, topics, services, actions)",
+    "Learn to define robot kinematics using URDF",
+    "Develop basic ROS 2 applications"
+  ]
+}

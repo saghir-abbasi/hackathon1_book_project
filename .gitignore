@@ -1,0 +1,30 @@
+# General OS and temporary files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+*.swp
+*.swo
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+
+# Python virtual environment and cache files
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# PowerShell generated files and exports
+*.psd1
+*.ps1xml
+*.pso
+*.cdxml
+*.CSV
+*.json # Only if these are generated/temporary, otherwise be specific
+
+# Output/build directories (if any are introduced later for validation scripts etc.)
+/build/
+/dist/
+/out/
