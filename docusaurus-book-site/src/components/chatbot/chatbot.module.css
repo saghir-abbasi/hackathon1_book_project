@@ -1,0 +1,281 @@
+/* chatbot.module.css */
+
+/* Main container for the entire chatbot component */
+.chatbotContainer {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+/* Floating action button */
+.chatbotButton {
+  background-color: var(--ifm-color-primary); /* Docusaurus primary color */
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  font-family: 'Orbitron', sans-serif; /* Example font from spec */
+}
+
+.chatbotButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Chat window panel */
+.chatWindow {
+  position: absolute;
+  bottom: 80px; /* Position above the button */
+  right: 0;
+  width: 370px;
+  max-width: 90vw;
+  height: 500px;
+  max-height: 70vh;
+  background-color: var(--ifm-background-color); /* Docusaurus background */
+  border: 1px solid var(--ifm-color-emphasis-300); /* Docusaurus border color */
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+
+  /* Robotics-themed elements */
+  /* Example: Neon border glow on hover/active - can be dynamic with JS */
+  box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--electric-blue);
+  border: 1px solid var(--circuit-line-border);
+}
+
+/* Header of the chat window */
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: var(--ifm-color-emphasis-100); /* Docusaurus subtle background */
+  border-bottom: 1px solid var(--circuit-line-border); /* Robotics theme */
+  color: var(--ifm-font-color-base);
+}
+
+.chatHeader h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-family: 'Orbitron', sans-serif; /* Robotics theme font */
+  color: var(--neon-cyan); /* Neon color for headings */
+}
+
+/* Close button in the header */
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ifm-font-color-base);
+  padding: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.closeButton:hover {
+  color: var(--electric-blue); /* Neon hover effect */
+}
+
+/* Body of the chat window where messages appear */
+.chatBody {
+  flex-grow: 1;
+  display: flex; /* Use flex to push input to bottom */
+  flex-direction: column;
+  overflow: hidden; /* Hide scrollbar if content exceeds */
+}
+
+/* Message List */
+.messageList {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.1); /* Slightly darker for contrast */
+}
+
+/* Individual chat message */
+.chatMessage {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  max-width: 80%;
+  position: relative; /* For timestamp positioning */
+  font-family: 'Inter', 'Roboto', sans-serif; /* Body text font */
+}
+
+.userMessage {
+  background-color: var(--neon-cyan-dark); /* User message background */
+  color: white;
+  align-self: flex-end; /* Align user messages to the right */
+  border-bottom-right-radius: 2px; /* Slight variation */
+  box-shadow: 0 0 5px var(--neon-cyan-light);
+}
+
+.botMessage {
+  background-color: var(--electric-blue-dark); /* Bot message background */
+  color: white;
+  align-self: flex-start; /* Align bot messages to the left */
+  border-bottom-left-radius: 2px; /* Slight variation */
+  box-shadow: 0 0 5px var(--electric-blue-light);
+}
+
+.messageContent {
+  word-wrap: break-word;
+}
+
+.messageTime {
+  font-size: 0.7em;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+  text-align: right; /* Time always right-aligned to its bubble */
+}
+
+/* Thinking indicator */
+.thinkingIndicator {
+  align-self: flex-start;
+  font-style: italic;
+  opacity: 0.8;
+  color: var(--ifm-font-color-secondary);
+  padding: 0.6rem 0.8rem;
+}
+
+
+/* Input form and field */
+.chatInputForm {
+  display: flex;
+  padding: 0.75rem;
+  border-top: 1px solid var(--circuit-line-border); /* Robotics theme */
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.chatInputField {
+  flex-grow: 1;
+  border: 1px solid var(--circuit-line-border); /* Robotics theme */
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font-family: 'JetBrains Mono', monospace; /* Code font from spec */
+  transition: border-color 0.3s ease;
+}
+
+.chatInputField:focus {
+  outline: none;
+  border-color: var(--neon-cyan); /* Highlight on focus */
+  box-shadow: 0 0 0 2px rgba(var(--neon-cyan-rgb), 0.3);
+}
+
+.sendButton {
+  background-color: var(--electric-blue); /* Send button color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sendButton:hover {
+  background-color: var(--electric-blue-light);
+  box-shadow: 0 0 8px var(--electric-blue-light);
+}
+
+
+/* Animation for window sliding in */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Global theme variables (these should ideally be in custom.css or a theme config) */
+:root {
+  /* Robotics Theme Colors */
+  --neon-cyan: #00e0ff;
+  --neon-cyan-light: #00ffff;
+  --neon-cyan-dark: #00aacc;
+  --neon-cyan-rgb: 0, 224, 255; /* For rgba usage */
+
+  --electric-blue: #405aff;
+  --electric-blue-light: #667cff;
+  --electric-blue-dark: #203ac0;
+  --electric-blue-rgb: 64, 90, 255; /* For rgba usage */
+
+  --circuit-line-border: rgba(128, 128, 128, 0.3); /* Subtle grey for lines */
+
+  /* Fonts */
+  --font-orbitron: 'Orbitron', sans-serif;
+  --font-inter-roboto: 'Inter', 'Roboto', sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+}
+
+/* Apply fonts to specific elements or globally */
+body {
+  font-family: var(--font-inter-roboto);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-orbitron);
+}
+
+code, pre {
+  font-family: var(--font-jetbrains-mono);
+}
+
+/* Basic AI Mesh Background Pattern (example, can be more complex SVG/image) */
+/* This could be applied to .chatWindow::before or a dedicated div */
+.chatWindow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+  z-index: -1; /* Ensure text is above */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .chatbotContainer {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .chatWindow {
+    width: 90vw;
+    height: 80vh;
+    bottom: 4rem; /* Adjust position for smaller button */
+    right: 5vw;
+  }
+
+  .chatbotButton {
+    width: 50px;
+    height: 50px;
+  }
+}
