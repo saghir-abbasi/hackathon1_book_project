@@ -28,3 +28,7 @@ venv/
 /build/
 /dist/
 /out/
+
+# Node.js / Docusaurus specific ignores
+node_modules/
+.env*

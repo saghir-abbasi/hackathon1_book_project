@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+    --ifm-color-primary: #008ac9; /* Electric Blue */
+    --ifm-color-primary-dark: #008ac9;
+    --ifm-color-primary-darker: #0081bf;
+    --ifm-color-primary-darkest: #006699;
+    --ifm-color-primary-light: #33bff0;
+    --ifm-color-primary-lighter: #4dc8f2;
+    --ifm-color-primary-lightest: #80d9f7;
+
+    --ifm-color-secondary: #2ee8e6; /* Neon Cyan */
+    --ifm-color-accent: #f6c90e; /* Robotics Yellow */
+    --ifm-color-dark-background: #0d0d0d; /* Deep Space Gray */
+    --ifm-color-light-background: #e8ecef; /* Alloy Silver */
+
+    --ifm-font-family-base: "Inter", "Roboto", sans-serif;
+    --ifm-font-family-monospace: "JetBrains Mono", monospace;
+    --ifm-font-family-headings: "Orbitron", sans-serif;
+
+    --ifm-code-font-size: 95%;
+    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+html {
+    font-family: var(--ifm-font-family-base);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--ifm-font-family-headings);
+}
+
+code,
+pre {
+    font-family: var(--ifm-font-family-monospace);
+}
+
+h1 {
+    font-weight: 700; /* Bold */
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+h2 {
+    font-weight: 600; /* Semibold */
+    letter-spacing: 0.08em;
+}
+
+h3,
+h4 {
+    font-weight: 500; /* Medium */
+    letter-spacing: 0.05em;
+}
+
+.button:hover {
+    box-shadow:
+        0 0 8px var(--ifm-color-secondary),
+        0 0 16px var(--ifm-color-secondary),
+        0 0 24px var(--ifm-color-secondary);
+}
+
+a:hover {
+    text-decoration: underline;
+    color: var(--ifm-color-accent);
+}
+
+/* Sidebar styling */
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible,
+.theme-doc-sidebar-item-link {
+    border-left: 2px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+
+.theme-doc-sidebar-item-category-level-1:hover > .menu__list-item-collapsible,
+.theme-doc-sidebar-item-link:hover {
+    border-left-color: var(--ifm-color-secondary);
+    box-shadow:
+        0 0 5px var(--ifm-color-secondary),
+        0 0 10px var(--ifm-color-secondary),
+        0 0 15px var(--ifm-color-secondary);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme="dark"] {
+    --ifm-color-primary: #25c2a0;
+    --ifm-color-primary-dark: #21af90;
+    --ifm-color-primary-darker: #1fa588;
+    --ifm-color-primary-darkest: #1a8870;
+    --ifm-color-primary-light: #29d5b0;
+    --ifm-color-primary-lighter: #32d8b4;
+    --ifm-color-primary-lightest: #4fddbf;
+    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}

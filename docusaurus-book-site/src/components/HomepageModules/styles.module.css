@@ -1,0 +1,57 @@
+/**
+ * CSS files with `modules.css` suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.modules {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+}
+
+.moduleSvg {
+  height: 200px;
+  width: 200px;
+}
+
+.moduleCard {
+  background-color: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-primary-darker);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 100%; /* Ensure cards in a row have equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes button to bottom */
+}
+
+.moduleCard:hover {
+  border-color: var(--ifm-color-secondary);
+  box-shadow: 0 0 10px var(--ifm-color-secondary), 0 0 20px var(--ifm-color-secondary);
+  transform: translateY(-5px);
+}
+
+.moduleCard h3 {
+  color: var(--ifm-color-primary);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.moduleCard p {
+  font-size: 0.95rem;
+  color: var(--ifm-font-color-base);
+  flex-grow: 1; /* Allows description to take up available space */
+}
+
+@media screen and (max-width: 996px) {
+  .moduleCard {
+    margin: 1rem auto;
+    max-width: 300px; /* Limit width on smaller screens */
+  }
+}
