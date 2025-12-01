@@ -1,2 +1,0 @@
-// Placeholder for a ROS2 Python publisher example
-// See book-content/modules/module-1-robotic-nervous-system/chapter-1-ros2-basics.mdx for usage.

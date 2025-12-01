@@ -35,7 +35,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          path: './docs/book-content-internal',
+          path: '../../book-content',
           routeBasePath: '/book',
           editUrl: undefined,
           exclude: ['shared/templates/**/*.mdx'],
