@@ -8,7 +8,7 @@ import customElementStyles from '../../css/custom-elements.module.css'; // Impor
 type ModuleItem = {
   title: string;
   Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: JSX.Element;
+  description: React.ReactElement;
   link: string;
 };
 
@@ -73,7 +73,7 @@ function Module({title, Svg, description, link}: ModuleItem) {
   );
 }
 
-export default function HomepageModules(): JSX.Element {
+export default function HomepageModules(): React.ReactElement {
   return (
     <section className={styles.modules}>
       <div className="container">

@@ -1,7 +1,8 @@
 import React from 'react';
+import clsx from 'clsx';
 import styles from '../chatbot.module.css';
 
-interface Props {
+interface ChatMessageProps {
   message: {
     id: string;
     text: string;
@@ -10,18 +11,20 @@ interface Props {
   };
 }
 
-const ChatMessage: React.FC<Props> = ({ message }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = message.sender === 'user';
-  const messageClass = isUser ? styles.userMessage : styles.botMessage;
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
 
   return (
-    <div className={`${styles.chatMessage} ${messageClass}`}>
+    <div
+      className={clsx(styles.chatMessage, {
+        [styles.userMessage]: isUser,
+        [styles.botMessage]: !isUser,
+      })}
+    >
       <div className={styles.messageContent}>{message.text}</div>
-      <div className={styles.messageTime}>{formatTime(message.timestamp)}</div>
+      <div className={styles.messageTimestamp}>
+        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+      </div>
     </div>
   );
 };

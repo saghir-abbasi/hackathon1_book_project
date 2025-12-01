@@ -1,47 +1,42 @@
-# Chatbot UI Component
+# Chatbot Component
 
-This directory contains the front-end UI shell for the AI Assistant chatbot, designed for integration into the Docusaurus book site. This component provides the visual interface and basic interaction logic without any backend connectivity.
+This directory contains the Docusaurus Chatbot component, providing a floating button and an interactive chat window.
 
-## Component Hierarchy
+## Component Hierarchy:
 
--   **`index.tsx` (Chatbot Container)**: The main entry point. Manages the overall state (`isOpen`, `messages`, `isThinking`), renders `ChatbotButton` and `ChatWindow`.
--   **`ChatbotButton.tsx`**: The floating button component that toggles the `ChatWindow` visibility.
--   **`ChatWindow.tsx`**: The main panel for the chat interface. Contains the header, message list, and input area.
--   **`components/`**:
-    -   **`ChatMessage.tsx`**: Displays a single chat message (user or bot).
-    -   **`ChatInput.tsx`**: Provides the text input field and send button.
+-   `index.tsx`: The main container component that manages the chatbot's open/close state, message history, and bot "thinking" state. It renders `ChatbotButton` and `ChatWindow`.
+-   `ChatbotButton.tsx`: The floating button that toggles the visibility of the `ChatWindow`.
+-   `ChatWindow.tsx`: The main chat interface, containing the header, message display area, and `ChatInput`. It maps over the `messages` state to render `ChatMessage` components.
+-   `components/ChatMessage.tsx`: Displays a single chat message, differentiating between user and bot messages.
+-   `components/ChatInput.tsx`: The input field and send button for users to type and send messages.
+-   `chatbot.module.css`: Contains all the styles for the chatbot components, including the robotics theme and responsive adjustments.
 
-## State Management
+## State Management:
 
-The chatbot's state is managed locally within the `index.tsx` (Chatbot Container) using React's `useState` hook. Key state variables include:
+The chatbot uses React's `useState` hook for local state management within `index.tsx`:
 
--   `isOpen`: Boolean, controls the visibility of the `ChatWindow`.
--   `messages`: Array of `Message` objects, stores the conversation history.
+-   `isOpen`: Boolean, controls the visibility of the chat window.
+-   `messages`: Array of `Message` objects, storing the conversation history. Each `Message` object has an `id`, `text`, `sender` ('user' or 'bot'), and `timestamp`.
 -   `isThinking`: Boolean, indicates when the bot is simulating a response.
 
-The `Message` data structure is defined as:
-`{ id: string; text: string; sender: 'user' | 'bot'; timestamp: Date; }`
+The `handleSendMessage` function in `index.tsx` is responsible for adding user messages to the history and triggering a simulated bot reply using `setTimeout`.
 
-## Theme Customization
+## Customization:
 
-The visual theme is applied using CSS Modules (`chatbot.module.css`). All major styling variables (colors, fonts, borders) are defined at the top of this file using CSS custom properties (`--neon-cyan`, `--electric-blue`, etc.).
+### Theming:
 
-To customize the theme:
-1.  Modify the CSS variable values in `docusaurus-book-site/src/components/chatbot/chatbot.module.css`.
-2.  Adjust styles for individual components within the same CSS module.
+The visual theme is defined in `chatbot.module.css` using CSS custom properties (variables) prefixed with `--chatbot-`. These can be easily modified to change colors, fonts, and other stylistic elements to match different themes.
 
-## Docusaurus Integration
+### Simulated Bot Responses:
 
-The chatbot is integrated globally into the Docusaurus site via the `docusaurus-book-site/src/theme/Root.tsx` file. The `Chatbot` component from `index.tsx` is rendered as a child of the `Root` component, ensuring its presence on all pages.
+The current bot responses are simulated using a `setTimeout` function in `index.tsx`. This is a placeholder for future backend integration. To integrate with a real API, replace the `setTimeout` logic within `handleSendMessage` with an actual API call (e.g., using `fetch` or `axios`).
 
-## Extending for Backend API Integration
+## Global Availability:
 
-Currently, bot responses are simulated using a `setTimeout` function in `index.tsx` (`handleSendMessage` function).
+The `Chatbot` component is integrated globally into the Docusaurus site by rendering it within `docusaurus-book-site/src/theme/Root.tsx`. This ensures the chatbot button is present on all pages.
 
-**To integrate a backend API (e.g., in Feature 2.6):**
+## Development Notes:
 
-1.  Locate the `handleSendMessage` function in `docusaurus-book-site/src/components/chatbot/index.tsx`.
-2.  Replace the `setTimeout` block that generates the placeholder bot response with an actual HTTP API call (e.g., using `fetch` or `axios`) to your backend endpoint.
-3.  Handle the API response: parse the actual bot message and update the `messages` state accordingly.
-4.  Ensure error handling is in place for API failures.
-5.  Consider moving the API call logic to a separate service file or custom hook for better separation of concerns.
+-   **Responsiveness**: Styles include media queries for optimal display on mobile and tablet devices.
+-   **Animations**: CSS transitions and keyframe animations are used for smooth UI interactions (e.g., chat window open/close, message fade-in).
+-   **No External UI Libraries**: The component is built using plain React, CSS Modules, and native browser APIs to keep the bundle size small and avoid unnecessary dependencies.

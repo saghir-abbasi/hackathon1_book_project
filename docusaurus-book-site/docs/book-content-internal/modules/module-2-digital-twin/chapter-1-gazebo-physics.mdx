@@ -1,0 +1,122 @@
+---
+id: "chapter-1-gazebo-physics"
+title: "Gazebo: Simulating Robot Physics"
+module: "module-2-digital-twin"
+order: 1
+difficulty: "intermediate"
+prerequisites: ["chapter-1-ros2-basics", "chapter-2-urdf-fundamentals"]
+tags: ["Gazebo", "Simulation", "Physics", "Robotics"]
+personalizationFlags: {}
+languageVariants: ["en"]
+assetReferences: []
+authors: ["Gemini Agent"]
+version: "0.1.0"
+lastUpdated: "2025-11-30"
+---
+
+# Gazebo: Simulating Robot Physics
+
+## Introduction
+
+Gazebo is a powerful 3D robotics simulator that allows you to accurately and efficiently test your robot designs and algorithms in a virtual environment. This chapter will introduce you to Gazebo, focusing on how to set up simulations, integrate URDF models, and interact with the simulated physics engine.
+
+## Theory
+
+**Gazebo** provides robust physics simulation, high-quality rendering, and a convenient interface for users. It works seamlessly with ROS 2, allowing for a realistic testing ground before deploying code to real hardware. Key features include:
+
+*   **Physics Engine**: Simulate gravity, collisions, friction, and other physical properties.
+*   **Sensors**: Emulate various sensors like cameras, LiDAR, IMUs, and contact sensors.
+*   **World Editor**: Create and modify complex simulation environments.
+*   **Plugins**: Extend Gazebo's functionality for custom robot behaviors and sensor integration.
+
+Integrating URDF models into Gazebo involves adding physical properties (mass, inertia), collision geometries, and sometimes transmission elements for controllers.
+
+## Code Examples
+
+### Launching a Simple Gazebo World
+
+This is an example of a ROS 2 launch file to start Gazebo with an empty world.
+
+```python
+# book-content/shared/code-snippets/gazebo-empty-world-launch.py
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from launch.actions import ExecuteProcess
+
+def generate_launch_description():
+    return LaunchDescription([
+        ExecuteProcess(
+            cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_factory.so', '-s', 'libgazebo_ros_force_system.so', 'empty.world'],
+            output='screen'
+        )
+    ])
+```
+
+### Spawning a URDF Model in Gazebo
+
+Once Gazebo is running, you can spawn a URDF model. This often happens via a ROS 2 node that uses the `spawn_entity.py` service.
+
+```python
+# book-content/shared/code-snippets/gazebo-spawn-urdf-launch.py
+import os
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    # Include the Gazebo launch file
+    gazebo_ros_package_path = get_package_share_directory('gazebo_ros')
+    gazebo_launch_path = os.path.join(gazebo_ros_package_path, 'launch', 'gazebo.launch.py')
+
+    gazebo_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(gazebo_launch_path),
+        launch_arguments={'gazebo_world': 'empty.world'}.items()
+    )
+
+    # Robot description from URDF (assuming you have a URDF package)
+    robot_description_package_path = get_package_share_directory('my_robot_description')
+    urdf_path = os.path.join(robot_description_package_path, 'urdf', 'simple_robot.urdf')
+
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': open(urdf_path).read()}]
+    )
+
+    # Spawn the URDF model
+    spawn_entity = Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic', 'robot_description', '-entity', 'my_robot'],
+        output='screen'
+    )
+
+    return LaunchDescription([
+        gazebo_launch,
+        robot_state_publisher,
+        spawn_entity
+    ])
+```
+
+## Simulation Exercises
+
+### Exercise 1: Spawn Your URDF in Gazebo
+
+**Objective**: To successfully launch Gazebo and load your `simple_robot.urdf` model into the simulated environment.
+
+**Steps**:
+
+1.  Ensure you have a ROS 2 package containing your URDF file and the necessary launch files (as described in the Code Examples).
+2.  Build your ROS 2 workspace.
+3.  Execute the launch file for spawning your robot: `ros2 launch my_robot_description gazebo_spawn_urdf_launch.py` (adjust path as needed).
+4.  Observe the Gazebo GUI.
+
+**Expected Outcome**: Gazebo launches, and your `simple_robot.urdf` model appears in the simulation environment, possibly falling to the ground if no ground plane is defined or if physics properties are not correctly set.
+
+## Summary
+
+This chapter provided an introduction to Gazebo, a vital tool for robotics simulation. You learned how to launch Gazebo, understand its key features, and begin integrating your URDF robot models into the simulated world. This foundation is essential for testing robot behaviors, sensors, and control algorithms in a safe and controlled virtual environment. The next chapter will explore Unity as an alternative simulation platform for robotics.

@@ -50,10 +50,10 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 ### Content Management
 
-The primary book content is located in the root `book-content/` directory of this project. The Docusaurus site is configured to directly use these files as the source of truth. To update the book content:
-1.  Modify the Markdown/MDX files directly within the root `book-content/` directory.
-2.  Ensure `_category_.json` files are correctly used in module subdirectories within `book-content/modules` for proper sidebar generation.
-3.  The Docusaurus build process will automatically pick up changes from the root `book-content/` directory.
+The book content is located in the `docs/book-content-internal/` directory within this project. To update the book content:
+1.  Place your Markdown/MDX files within `docs/book-content-internal/`.
+2.  Ensure `_category_.json` files are correctly used in module subdirectories for proper sidebar generation.
+3.  The Docusaurus build process will automatically pick up changes.
 
 ### Theme Customization
 

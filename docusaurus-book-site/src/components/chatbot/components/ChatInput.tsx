@@ -1,42 +1,54 @@
 import React, { useState } from 'react';
+import clsx from 'clsx';
 import styles from '../chatbot.module.css';
 
-interface Props {
+interface ChatInputProps {
   onSendMessage: (message: string) => void;
+  isThinking: boolean;
 }
 
-const ChatInput: React.FC<Props> = ({ onSendMessage }) => {
-  const [input, setInput] = useState('');
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isThinking }) => {
+  const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
-      onSendMessage(input);
-      setInput('');
+    if (message.trim() && !isThinking) {
+      onSendMessage(message);
+      setMessage('');
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSubmit(e);
     }
   };
 
   return (
-    <form className={styles.chatInputForm} onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Type your message..."
+    <form onSubmit={handleSubmit} className={styles.chatInputForm}>
+      <textarea
         className={styles.chatInputField}
+        placeholder={isThinking ? 'AI is thinking...' : 'Type your message...'}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
+        disabled={isThinking}
+        rows={1}
       />
-      <button type="submit" className={styles.sendButton}>
-        {/* Send Icon */}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      <button
+        type="submit"
+        className={clsx(styles.chatSendButton, isThinking && styles.chatSendButtonDisabled)}
+        disabled={isThinking}
+        aria-label="Send message"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className={styles.sendIcon}
+        >
+          <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
         </svg>
       </button>
     </form>

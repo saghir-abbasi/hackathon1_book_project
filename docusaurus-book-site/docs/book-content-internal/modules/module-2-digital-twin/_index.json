@@ -1,0 +1,12 @@
+{
+  "id": "module-2-digital-twin",
+  "title": "Digital Twin",
+  "order": 2,
+  "description": "Explore the creation and utilization of digital twins for robotics, covering simulation environments like Gazebo and Unity.",
+  "prerequisites": ["Basic Physics Concepts", "chapter-1-ros2-basics"],
+  "learningObjectives": [
+    "Understand digital twin concepts and applications",
+    "Learn to build and simulate robots in Gazebo",
+    "Explore Unity for robotics simulation and sensor integration"
+  ]
+}

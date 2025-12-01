@@ -1,0 +1,115 @@
+---
+id: "chapter-2-urdf-fundamentals"
+title: "Understanding URDF Fundamentals"
+module: "module-1-robotic-nervous-system"
+order: 2
+difficulty: "beginner"
+prerequisites: ["chapter-1-ros2-basics"]
+tags: ["ROS2", "URDF", "Robotics", "Kinematics"]
+personalizationFlags: {}
+languageVariants: ["en"]
+assetReferences: []
+authors: ["Gemini Agent"]
+version: "0.1.0"
+lastUpdated: "2025-11-30"
+---
+
+# Understanding URDF Fundamentals
+
+## Introduction
+
+This chapter dives into the Uniform Robot Description Format (URDF), an XML format used in ROS 2 to describe a robot's kinematic and dynamic properties. We will learn how to define a robot's links and joints, and how URDF is used to represent the physical structure of a robot.
+
+## Theory
+
+**URDF (Unified Robot Description Format)** is an XML file format for describing all elements of a robot. It is commonly used in ROS 2 to define:
+
+*   **Links**: The rigid bodies of the robot (e.g., base, arm segments, end-effector). Links have associated physical properties like mass, inertia, and visual/collision geometries.
+*   **Joints**: The connections between links that define their relative motion (e.g., revolute, prismatic, fixed). Joints specify the type of motion allowed and their limits.
+
+URDF files are crucial for visualization in tools like RViz, simulation in Gazebo, and for various robotics algorithms (e.g., kinematics, dynamics).
+
+## Code Examples
+
+### Simple Robot URDF Structure
+
+Here's a basic URDF structure for a two-link robot arm.
+
+```xml
+<?xml version="1.0"?>
+<robot name="simple_arm">
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.57" upper="1.57" effort="100" velocity="100"/>
+  </joint>
+
+  <link name="link1">
+    <visual>
+      <geometry>
+        <cylinder radius="0.02" length="0.2"/>
+      </geometry>
+    </visual>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </link>
+
+  <joint name="joint2" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 0 0.2" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="100" velocity="100"/>
+  </joint>
+
+  <link name="link2">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+    </visual>
+    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+  </link>
+
+</robot>
+```
+
+## Simulation Exercises
+
+### Exercise 1: Visualize a Simple URDF in RViz
+
+**Objective**: To load and visualize a robot model defined in URDF using ROS 2's visualization tool, RViz.
+
+**Steps**:
+
+1.  Save the above `simple_robot.urdf` content into a file within a ROS 2 package (e.g., `src/my_robot_description/urdf/simple_robot.urdf`).
+2.  Launch the `robot_state_publisher` and `joint_state_publisher_gui` for your URDF. This typically involves a launch file:
+    ```xml
+    <!-- my_robot_description/launch/display.launch.py -->
+    <launch>
+        <arg name="model" default="$(find my_robot_description)/urdf/simple_robot.urdf"/>
+        <param name="robot_description" command="xacro $(arg model)"/>
+        <node pkg="robot_state_publisher" exec="robot_state_publisher"/>
+        <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"/>
+        <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share my_robot_description)/rviz/urdf.rviz"/>
+    </launch>
+    ```
+    (You might need to create a simple `urdf.rviz` config if you don't have one.)
+3.  Run the launch file: `ros2 launch my_robot_description display.launch.py`
+4.  In RViz, manipulate the sliders in the `joint_state_publisher_gui` to see the robot move.
+
+**Expected Outcome**: RViz displays the 3D model of the simple robot arm, and you can interactively change its joint angles using the GUI.
+
+## Summary
+
+This chapter introduced URDF as a powerful format for describing robot kinematics. We covered the concepts of links and joints and learned how a simple URDF is structured. You also gained practical experience visualizing a URDF model in RViz. A solid understanding of URDF is fundamental for working with robot models in ROS 2, especially for simulation and control tasks.

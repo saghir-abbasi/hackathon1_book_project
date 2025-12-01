@@ -1,281 +1,307 @@
-/* chatbot.module.css */
+/* Root Custom Properties for Robotics Theme */
+:root {
+  --chatbot-color-neon-cyan: #00e5ff;
+  --chatbot-color-electric-blue: #007bff;
+  --chatbot-color-dark-grey: #1a1a2e;
+  --chatbot-color-medium-grey: #2e2e4a;
+  --chatbot-color-light-grey: #b0b0d0;
+  --chatbot-color-text-light: #e0e0e0;
+  --chatbot-font-family-heading: 'Orbitron', sans-serif;
+  --chatbot-font-family-body: 'Inter', sans-serif;
+  --chatbot-border-radius: 8px;
+  --chatbot-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  --chatbot-circuit-border-color: rgba(0, 229, 255, 0.3); /* Neon cyan transparent */
+}
 
-/* Main container for the entire chatbot component */
-.chatbotContainer {
+/* Fallback for Orbitron/Inter - Docusaurus might provide them, or they need to be loaded */
+body {
+  --ifm-font-family-base: var(--chatbot-font-family-body);
+  --ifm-font-family-monospace: var(--chatbot-font-family-body);
+}
+
+.chatbotButton {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  z-index: 1000;
-}
-
-/* Floating action button */
-.chatbotButton {
-  background-color: var(--ifm-color-primary); /* Docusaurus primary color */
-  color: white;
-  width: 60px;
-  height: 60px;
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--chatbot-color-electric-blue);
   border-radius: 50%;
-  border: none;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  box-shadow: var(--chatbot-box-shadow);
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  font-family: 'Orbitron', sans-serif; /* Example font from spec */
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1000;
+  border: none;
+  color: white;
 }
 
 .chatbotButton:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  background-color: var(--chatbot-color-neon-cyan);
+  box-shadow: 0 0 20px var(--chatbot-color-neon-cyan);
 }
 
-/* Chat window panel */
+.chatbotButtonOpen {
+  background-color: var(--chatbot-color-dark-grey); /* Darker when open */
+}
+
+.chatbotButtonOpen:hover {
+  background-color: var(--chatbot-color-medium-grey);
+}
+
+.chatbotIcon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+/* Chat Window Styles */
 .chatWindow {
-  position: absolute;
-  bottom: 80px; /* Position above the button */
-  right: 0;
-  width: 370px;
-  max-width: 90vw;
-  height: 500px;
-  max-height: 70vh;
-  background-color: var(--ifm-background-color); /* Docusaurus background */
-  border: 1px solid var(--ifm-color-emphasis-300); /* Docusaurus border color */
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 22rem; /* Adjusted for better fit */
+  height: 32rem; /* Adjusted for better fit */
+  background-color: var(--chatbot-color-dark-grey);
+  border-radius: var(--chatbot-border-radius);
+  box-shadow: var(--chatbot-box-shadow);
   display: flex;
   flex-direction: column;
+  z-index: 999;
   overflow: hidden;
-  animation: slideIn 0.3s ease-out;
-
-  /* Robotics-themed elements */
-  /* Example: Neon border glow on hover/active - can be dynamic with JS */
-  box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--electric-blue);
-  border: 1px solid var(--circuit-line-border);
+  transform: translateY(100%) scale(0.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease-out; /* More dynamic transition */
+  border: 2px solid var(--chatbot-circuit-border-color); /* Circuit-line border */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="%231a1a2e"/><path d="M 0 0 L 50 50 L 0 100 Z M 100 0 L 50 50 L 100 100 Z" fill="%2300e5ff" fill-opacity="0.05" stroke="%2300e5ff" stroke-width="0.5"/></svg>'); /* AI-mesh background */
+  background-size: 20px 20px;
 }
 
-/* Header of the chat window */
+.chatWindowOpen {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+
 .chatHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
-  background-color: var(--ifm-color-emphasis-100); /* Docusaurus subtle background */
-  border-bottom: 1px solid var(--circuit-line-border); /* Robotics theme */
-  color: var(--ifm-font-color-base);
+  padding: 0.8rem 1rem;
+  background-color: var(--chatbot-color-medium-grey);
+  color: var(--chatbot-color-neon-cyan);
+  border-bottom: 1px solid var(--chatbot-circuit-border-color);
+  flex-shrink: 0;
+  font-family: var(--chatbot-font-family-heading);
 }
 
-.chatHeader h2 {
-  font-size: 1.1rem;
+.chatTitle {
   margin: 0;
-  font-family: 'Orbitron', sans-serif; /* Robotics theme font */
-  color: var(--neon-cyan); /* Neon color for headings */
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-shadow: 0 0 5px var(--chatbot-color-neon-cyan);
 }
 
-/* Close button in the header */
-.closeButton {
+.chatCloseButton {
   background: none;
   border: none;
+  color: var(--chatbot-color-text-light);
   cursor: pointer;
-  color: var(--ifm-font-color-base);
-  padding: 0.25rem;
-  transition: color 0.3s ease;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.closeButton:hover {
-  color: var(--electric-blue); /* Neon hover effect */
+.chatCloseButton:hover {
+  background-color: rgba(0, 229, 255, 0.2);
+  color: var(--chatbot-color-neon-cyan);
 }
 
-/* Body of the chat window where messages appear */
-.chatBody {
-  flex-grow: 1;
-  display: flex; /* Use flex to push input to bottom */
-  flex-direction: column;
-  overflow: hidden; /* Hide scrollbar if content exceeds */
+.closeIcon {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
-/* Message List */
-.messageList {
+.chatMessages {
   flex-grow: 1;
   padding: 1rem;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.1); /* Slightly darker for contrast */
+  background-color: var(--chatbot-color-dark-grey); /* Match window background */
+  color: var(--chatbot-color-text-light);
+  font-family: var(--chatbot-font-family-body);
 }
 
-/* Individual chat message */
+.chatInputContainer {
+  flex-shrink: 0;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--chatbot-circuit-border-color);
+  background-color: var(--chatbot-color-medium-grey);
+}
+
+/* Chat Message Styles */
 .chatMessage {
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
   max-width: 80%;
-  position: relative; /* For timestamp positioning */
-  font-family: 'Inter', 'Roboto', sans-serif; /* Body text font */
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 .userMessage {
-  background-color: var(--neon-cyan-dark); /* User message background */
+  align-self: flex-end;
+  background-color: var(--chatbot-color-electric-blue);
   color: white;
-  align-self: flex-end; /* Align user messages to the right */
-  border-bottom-right-radius: 2px; /* Slight variation */
-  box-shadow: 0 0 5px var(--neon-cyan-light);
+  border-radius: var(--chatbot-border-radius) var(--chatbot-border-radius) 0 var(--chatbot-border-radius);
+  padding: 0.6rem 0.9rem;
 }
 
 .botMessage {
-  background-color: var(--electric-blue-dark); /* Bot message background */
-  color: white;
-  align-self: flex-start; /* Align bot messages to the left */
-  border-bottom-left-radius: 2px; /* Slight variation */
-  box-shadow: 0 0 5px var(--electric-blue-light);
+  align-self: flex-start;
+  background-color: var(--chatbot-color-medium-grey);
+  color: var(--chatbot-color-text-light);
+  border-radius: var(--chatbot-border-radius) var(--chatbot-border-radius) var(--chatbot-border-radius) 0;
+  padding: 0.6rem 0.9rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .messageContent {
-  word-wrap: break-word;
+  font-size: 0.9rem;
+  line-height: 1.3;
 }
 
-.messageTime {
-  font-size: 0.7em;
-  opacity: 0.7;
+.messageTimestamp {
+  font-size: 0.7rem;
+  color: var(--chatbot-color-light-grey);
   margin-top: 0.2rem;
-  text-align: right; /* Time always right-aligned to its bubble */
+  text-align: right;
+  opacity: 0.7;
 }
 
-/* Thinking indicator */
-.thinkingIndicator {
-  align-self: flex-start;
-  font-style: italic;
-  opacity: 0.8;
-  color: var(--ifm-font-color-secondary);
-  padding: 0.6rem 0.8rem;
+.botMessage .messageTimestamp {
+  text-align: left;
 }
 
-
-/* Input form and field */
+/* Chat Input Styles */
 .chatInputForm {
   display: flex;
-  padding: 0.75rem;
-  border-top: 1px solid var(--circuit-line-border); /* Robotics theme */
-  background-color: var(--ifm-color-emphasis-100);
+  gap: 0.5rem;
 }
 
 .chatInputField {
   flex-grow: 1;
-  border: 1px solid var(--circuit-line-border); /* Robotics theme */
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--chatbot-circuit-border-color);
+  border-radius: var(--chatbot-border-radius);
+  padding: 0.6rem 0.8rem;
   font-size: 0.9rem;
-  background-color: var(--ifm-background-color);
-  color: var(--ifm-font-color-base);
-  font-family: 'JetBrains Mono', monospace; /* Code font from spec */
-  transition: border-color 0.3s ease;
+  resize: none;
+  min-height: 2.5rem;
+  max-height: 6rem;
+  overflow-y: auto;
+  background-color: var(--chatbot-color-dark-grey);
+  color: var(--chatbot-color-text-light);
+  font-family: var(--chatbot-font-family-body);
 }
 
 .chatInputField:focus {
   outline: none;
-  border-color: var(--neon-cyan); /* Highlight on focus */
-  box-shadow: 0 0 0 2px rgba(var(--neon-cyan-rgb), 0.3);
+  border-color: var(--chatbot-color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.4);
 }
 
-.sendButton {
-  background-color: var(--electric-blue); /* Send button color */
+.chatSendButton {
+  background-color: var(--chatbot-color-electric-blue);
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  margin-left: 0.5rem;
+  border-radius: var(--chatbot-border-radius);
+  padding: 0.5rem 0.8rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
 }
 
-.sendButton:hover {
-  background-color: var(--electric-blue-light);
-  box-shadow: 0 0 8px var(--electric-blue-light);
+.chatSendButton:hover:not(:disabled) {
+  background-color: var(--chatbot-color-neon-cyan);
 }
 
+.chatSendButtonDisabled {
+  background-color: var(--chatbot-color-medium-grey);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 
-/* Animation for window sliding in */
-@keyframes slideIn {
-  from {
+.sendIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: white;
+}
+
+/* Thinking Indicator Styles */
+.thinkingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  color: var(--chatbot-color-neon-cyan);
+  font-family: var(--chatbot-font-family-heading);
+}
+
+.thinkingIndicator span {
+  animation: blink 1.4s infinite linear;
+  animation-fill-mode: both;
+}
+
+.thinkingIndicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.thinkingIndicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
     opacity: 0;
-    transform: translateY(20px);
   }
-  to {
+  30%, 50% {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* Global theme variables (these should ideally be in custom.css or a theme config) */
-:root {
-  /* Robotics Theme Colors */
-  --neon-cyan: #00e0ff;
-  --neon-cyan-light: #00ffff;
-  --neon-cyan-dark: #00aacc;
-  --neon-cyan-rgb: 0, 224, 255; /* For rgba usage */
-
-  --electric-blue: #405aff;
-  --electric-blue-light: #667cff;
-  --electric-blue-dark: #203ac0;
-  --electric-blue-rgb: 64, 90, 255; /* For rgba usage */
-
-  --circuit-line-border: rgba(128, 128, 128, 0.3); /* Subtle grey for lines */
-
-  /* Fonts */
-  --font-orbitron: 'Orbitron', sans-serif;
-  --font-inter-roboto: 'Inter', 'Roboto', sans-serif;
-  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Apply fonts to specific elements or globally */
-body {
-  font-family: var(--font-inter-roboto);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-orbitron);
-}
-
-code, pre {
-  font-family: var(--font-jetbrains-mono);
-}
-
-/* Basic AI Mesh Background Pattern (example, can be more complex SVG/image) */
-/* This could be applied to .chatWindow::before or a dedicated div */
-.chatWindow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-  opacity: 0.1;
-  z-index: -1; /* Ensure text is above */
-}
-
-/* Mobile Responsiveness */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .chatbotContainer {
+  .chatbotButton {
     bottom: 1rem;
     right: 1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .chatbotIcon {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   .chatWindow {
-    width: 90vw;
-    height: 80vh;
-    bottom: 4rem; /* Adjust position for smaller button */
-    right: 5vw;
-  }
-
-  .chatbotButton {
-    width: 50px;
-    height: 50px;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
   }
 }
