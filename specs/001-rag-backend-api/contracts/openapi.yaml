@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  title: RAG Chatbot Backend API
+  version: 1.0.0
+  description: API for managing book content embeddings, vector search, and chatbot interactions.
+
+servers:
+  - url: http://localhost:8000
+    description: Development Server
+
+paths:
+  /embed:
+    post:
+      summary: Embed book content chunks
+      operationId: embedContent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content_chunks
+              properties:
+                content_chunks:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - text
+                    properties:
+                      text:
+                        type: string
+                        description: Raw text to embed.
+                      metadata:
+                        type: object
+                        description: Optional structured information about the chunk.
+                        nullable: true
+      responses:
+        '200':
+          description: Successful embedding.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success, failure]
+                  embedded_count:
+                    type: integer
+                    description: Number of chunks successfully embedded.
+        '400':
+          description: Invalid request payload.
+
+  /query:
+    post:
+      summary: Query book content via vector search
+      operationId: queryContent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - question
+              properties:
+                question:
+                  type: string
+                  description: User's question for vector search.
+                limit:
+                  type: integer
+                  description: Maximum number of results to return.
+                  default: 5
+      responses:
+        '200':
+          description: Successful retrieval of relevant text chunks.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                          description: Retrieved text chunk.
+                        metadata:
+                          type: object
+                          description: Original metadata of the chunk.
+                        score:
+                          type: number
+                          format: float
+                          description: Relevance score from vector search.
+        '400':
+          description: Invalid request payload.
+        '404':
+          description: No relevant content found.
+
+  /chat:
+    post:
+      summary: Get assistant response for chatbot interaction
+      operationId: chatInteraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_message
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  description: Existing session ID. If not provided, a new one is created.
+                  nullable: true
+                user_message:
+                  type: string
+                  description: The user's message.
+                chat_history:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      sender:
+                        type: string
+                        enum: [user, bot]
+                      text:
+                        type: string
+                      timestamp:
+                        type: string
+                        format: date-time
+                  description: Previous messages in the conversation.
+                  nullable: true
+      responses:
+        '200':
+          description: Successful generation of assistant response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session_id:
+                    type: string
+                    format: uuid
+                    description: The current session ID.
+                  assistant_response:
+                    type: string
+                    description: The chatbot's generated response.
+                  chat_message_id:
+                    type: string
+                    format: uuid
+                    description: ID of the new assistant message.
+                  context_used:
+                    type: array
+                    items:
+                      type: string
+                    description: Snippets of book content used to form the response.
+        '400':
+          description: Invalid request payload.
+        '500':
+          description: Internal server error during RAG pipeline processing.
