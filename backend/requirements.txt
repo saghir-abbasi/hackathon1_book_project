@@ -10,3 +10,5 @@ openai
 tenacity
 pytest
 asyncio
+bleach
+html5lib

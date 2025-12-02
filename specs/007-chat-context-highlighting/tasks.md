@@ -27,9 +27,9 @@ The implementation will follow an MVP-first approach, prioritizing User Story 1 
 
 ## Phase 1: Setup
 
-- [ ] T001 Install `DOMPurify` in `docusaurus-book-site/package.json` (Frontend)
-- [ ] T002 Install `Bleach` and `html5lib` in `backend/requirements.txt` (Backend)
-- [ ] T003 Extend `ChatRequest` Pydantic model in `backend/src/models/chat_models.py` to include `selected_text: Optional[str]`, `chapter_id: Optional[str]`, `section_id: Optional[str]`, and `offsets: Optional[List[int]]`.
+- [X] T001 Install `DOMPurify` in `docusaurus-book-site/package.json` (Frontend)
+- [X] T002 Install `Bleach` and `html5lib` in `backend/requirements.txt` (Backend)
+- [X] T003 Extend `ChatRequest` Pydantic model in `backend/src/models/chat_models.py` to include `selected_text: Optional[str]`, `chapter_id: Optional[str]`, `section_id: Optional[str]`, and `offsets: Optional[List[int]]`.
 
 ---
 
@@ -41,39 +41,39 @@ The implementation will follow an MVP-first approach, prioritizing User Story 1 
 
 ### Frontend: Text Selection Detection Layer
 
-- [ ] T004 [P] [US1] Create `useTextSelection.js` hook in `docusaurus-book-site/src/ai/hooks/useTextSelection.js`
-- [ ] T005 [P] [US1] Implement DOM event listeners (`mouseup`, `keyup`) in `useTextSelection.js` for text selection
-- [ ] T006 [P] [US1] Implement logic in `useTextSelection.js` to extract selected text, chapter ID, section ID, and character offsets
-- [ ] T007 [P] [US1] Implement client-side sanitization of `selectedText` using `DOMPurify` in `useTextSelection.js`
-- [ ] T008 [P] [US1] Implement maximum length enforcement (1000 characters) for `selectedText` in `useTextSelection.js`
-- [ ] T009 [US1] Integrate `useTextSelection` hook by modifying `docusaurus-book-site/src/theme/Layout/index.js` (swizzling)
+- [X] T004 [P] [US1] Create `useTextSelection.js` hook in `docusaurus-book-site/src/ai/hooks/useTextSelection.js`
+- [X] T005 [P] [US1] Implement DOM event listeners (`mouseup`, `keyup`) in `useTextSelection.js` for text selection
+- [X] T006 [P] [US1] Implement logic in `useTextSelection.js` to extract selected text, chapter ID, section ID, and character offsets
+- [X] T007 [P] [US1] Implement client-side sanitization of `selectedText` using `DOMPurify` in `useTextSelection.js`
+- [X] T008 [P] [US1] Implement maximum length enforcement (1000 characters) for `selectedText` in `useTextSelection.js`
+- [X] T009 [US1] Integrate `useTextSelection` hook by modifying `docusaurus-book-site/src/theme/Layout/index.js` (swizzling)
 
 ### Frontend: UI Highlighting & Floating Action Button
 
-- [ ] T010 [P] [US1] Create CSS module for robotics-themed highlight (neon blue, grid pattern, rounded corners) in `docusaurus-book-site/src/css/custom.css` (or new dedicated CSS file)
-- [ ] T011 [P] [US1] Create `AskAboutThis.jsx` component in `docusaurus-book-site/src/ai/components/AskAboutThis.jsx`
-- [ ] T012 [P] [US1] Implement logic for `AskAboutThis.jsx` to appear near selection, using collected metadata
-- [ ] T013 [P] [US1] Implement mobile-friendly repositioning for `AskAboutThis.jsx`
-- [ ] T014 [P] [US1] Implement click handler for "Ask About This" button in `AskAboutThis.jsx` to send data to chatbot and open panel
-- [ ] T015 [P] [US1] Implement accessibility for keyboard navigation and screen readers for `AskAboutThis.jsx`
+- [X] T010 [P] [US1] Create CSS module for robotics-themed highlight (neon blue, grid pattern, rounded corners) in `docusaurus-book-site/src/css/custom.css` (or new dedicated CSS file)
+- [X] T011 [P] [US1] Create `AskAboutThis.jsx` component in `docusaurus-book-site/src/ai/components/AskAboutThis.jsx`
+- [X] T012 [P] [US1] Implement logic for `AskAboutThis.jsx` to appear near selection, using collected metadata
+- [X] T013 [P] [US1] Implement mobile-friendly repositioning for `AskAboutThis.jsx`
+- [X] T014 [P] [US1] Implement click handler for "Ask About This" button in `AskAboutThis.jsx` to send data to chatbot and open panel
+- [X] T015 [P] [US1] Implement accessibility for keyboard navigation and screen readers for `AskAboutThis.jsx`
 
 ### Frontend: Frontend → Backend Metadata Pipeline Extension
 
-- [ ] T016 [US1] Modify `docusaurus-book-site/src/agent-client/chatClient.js` to accept `sectionId` and `offsets` in `sendMessage` and include in payload
-- [ ] T017 [US1] Modify `docusaurus-book-site/src/agent-client/agentBridge.js` to accept `sectionId` and `offsets` in `sendChatMessage` and pass to `chatClient.sendMessage`
-- [ ] T018 [US1] Integrate the call to `agentBridge.sendChatMessage` in the UI component (`AskAboutThis.jsx` or its parent) with the collected metadata from `useTextSelection`
+- [X] T016 [US1] Modify `docusaurus-book-site/src/agent-client/chatClient.js` to accept `sectionId` and `offsets` in `sendMessage` and include in payload
+- [X] T017 [US1] Modify `docusaurus-book-site/src/agent-client/agentBridge.js` to accept `sectionId` and `offsets` in `sendChatMessage` and pass to `chatClient.sendMessage`
+- [X] T018 [US1] Integrate the call to `agentBridge.sendChatMessage` in the UI component (`AskAboutThis.jsx` or its parent) with the collected metadata from `useTextSelection`
 
 ### Backend: Metadata Processing
 
-- [ ] T019 [P] [US1] Create `metadata_injector.py` utility in `backend/src/utils/metadata_injector.py`
-- [ ] T020 [P] [US1] Implement `metadata_injector.py` to validate incoming metadata, strip HTML using `Bleach`, and enforce maximum length (1000 characters) for `selected_text`
-- [ ] T021 [US1] Integrate `metadata_injector.py` into the request processing flow in `backend/src/api/chat_router.py` to process incoming contextual metadata
+- [X] T019 [P] [US1] Create `metadata_injector.py` utility in `backend/src/utils/metadata_injector.py`
+- [X] T020 [P] [US1] Implement `metadata_injector.py` to validate incoming metadata, strip HTML using `Bleach`, and enforce maximum length (1000 characters) for `selected_text`
+- [X] T021 [US1] Integrate `metadata_injector.py` into the request processing flow in `backend/src/api/chat_router.py` to process incoming contextual metadata
 
 ### Backend: Agent Context Prioritization
 
-- [ ] T022 [US1] Modify `backend/src/api/chat_router.py` to extract `selected_text`, `chapter_id`, `section_id`, `offsets` from `ChatRequest` and pass to RAG service
-- [ ] T023 [US1] Modify `backend/src/services/rag_service.py` (`retrieve_relevant_segments`) to use `chapter_id` and `section_id` for Qdrant filtering
-- [ ] T024 [US1] Modify `backend/src/services/rag_service.py` (`generate_rag_response`) to incorporate `selected_text` into query embedding and LLM prompt with higher priority
+- [X] T022 [US1] Modify `backend/src/api/chat_router.py` to extract `selected_text`, `chapter_id`, `section_id`, `offsets` from `ChatRequest` and pass to RAG service
+- [X] T023 [US1] Modify `backend/src/services/rag_service.py` (`retrieve_relevant_segments`) to use `chapter_id` and `section_id` for Qdrant filtering
+- [X] T024 [US1] Modify `backend/src/services/rag_service.py` (`generate_rag_response`) to incorporate `selected_text` into query embedding and LLM prompt with higher priority
 
 ---
 
@@ -85,16 +85,16 @@ The implementation will follow an MVP-first approach, prioritizing User Story 1 
 
 ### Frontend: Context Bubble Integration in Chat Panel
 
-- [ ] T025 [P] [US2] Create `ContextBubble.jsx` component in `docusaurus-book-site/src/ai/components/ContextBubble.jsx`
-- [ ] T026 [P] [US2] Implement `ContextBubble.jsx` to display selected text, expand/collapse functionality, and a remove context button
-- [ ] T027 [US2] Create `contextIntegration.js` in `docusaurus-book-site/src/ai/chat/contextIntegration.js` for additive integration of `ContextBubble.jsx` into the chatbot UI
-- [ ] T028 [US2] Implement logic for removing context (clearing `selectedText` and other metadata in the frontend state) in `contextIntegration.js`
+- [X] T025 [P] [US2] Create `ContextBubble.jsx` component in `docusaurus-book-site/src/ai/components/ContextBubble.jsx`
+- [X] T026 [P] [US2] Implement `ContextBubble.jsx` to display selected text, expand/collapse functionality, and a remove context button
+- [X] T027 [US2] Create `contextIntegration.js` in `docusaurus-book-site/src/ai/chat/contextIntegration.js` for additive integration of `ContextBubble.jsx` into the chatbot UI
+- [X] T028 [US2] Implement logic for removing context (clearing `selectedText` and other metadata in the frontend state) in `contextIntegration.js`
 
 ---
 
 ## Phase 4: Polish & Cross-Cutting Concerns
 
-- [ ] T029 Update `quickstart.md` in `specs/007-chat-context-highlighting/quickstart.md` with any new setup/testing details.
-- [ ] T030 Add unit and integration tests for new frontend components, hooks, and backend utilities.
-- [ ] T031 Ensure all new code adheres to documentation standards (docstrings, comments).
-- [ ] T032 Conduct end-to-end testing of the feature, covering all acceptance scenarios and edge cases identified in the spec.
+- [X] T029 Update `quickstart.md` in `specs/007-chat-context-highlighting/quickstart.md` with any new setup/testing details.
+- [X] T030 Add unit and integration tests for new frontend components, hooks, and backend utilities.
+- [X] T031 Ensure all new code adheres to documentation standards (docstrings, comments).
+- [X] T032 Conduct end-to-end testing of the feature, covering all acceptance scenarios and edge cases identified in the spec.

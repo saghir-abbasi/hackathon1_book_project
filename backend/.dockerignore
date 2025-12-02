@@ -1,0 +1,11 @@
+# Dockerignore for Python backend
+__pycache__/
+.venv/
+venv/
+*.pyc
+.git/
+.gitignore
+*.log
+.env*
+dist/
+build/

@@ -1,0 +1,15 @@
+# Python specific ignores
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db

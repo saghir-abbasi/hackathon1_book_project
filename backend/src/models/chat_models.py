@@ -11,6 +11,10 @@ class ChatRequest(BaseModel):
     session_id: Optional[uuid.UUID] = None
     user_message: str
     chat_history: Optional[List[ChatMessage]] = None
+    selected_text: Optional[str] = None
+    chapter_id: Optional[str] = None
+    section_id: Optional[str] = None
+    offsets: Optional[List[int]] = None
 
 class ChatResponse(BaseModel):
     session_id: uuid.UUID

@@ -1,24 +1,46 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import openai
 # import anthropic
 from ..core.embeddings import generate_embeddings
 from ..db.qdrant_client import qdrant_manager
 from ..config import settings
-from qdrant_client.models import PointStruct
+from qdrant_client.models import PointStruct, FieldCondition, Filter, MatchValue
 from tenacity import retry, wait_random_exponential, stop_after_attempt
 
 
-async def retrieve_relevant_segments(query_text: str, limit: int = 5) -> List[Dict[str, Any]]:
+async def retrieve_relevant_segments(
+    query_text: str, 
+    limit: int = 5, 
+    chapter_id: Optional[str] = None, 
+    section_id: Optional[str] = None,
+    selected_text: Optional[str] = None # Added selected_text
+) -> List[Dict[str, Any]]:
     """
-    Retrieves relevant book segments from Qdrant based on a query text.
+    Retrieves relevant book segments from Qdrant based on a query text and optional filters.
+    If selected_text is provided, it's incorporated into the query for higher relevance.
     """
-    # Generate embedding for the query
-    query_embedding = (await generate_embeddings([query_text], settings.EMBEDDING_MODEL_PROVIDER))[0]
+    # Incorporate selected_text into the query for embedding
+    effective_query_text = query_text
+    if selected_text:
+        effective_query_text = f"{selected_text}. {query_text}"
+
+    # Generate embedding for the effective query
+    query_embedding = (await generate_embeddings([effective_query_text], settings.EMBEDDING_MODEL_PROVIDER))[0]
+
+    _filter = None
+    if chapter_id or section_id:
+        conditions = []
+        if chapter_id:
+            conditions.append(FieldCondition(key="chapter_id", match=MatchValue(value=chapter_id)))
+        if section_id:
+            conditions.append(FieldCondition(key="section_id", match=MatchValue(value=section_id)))
+        _filter = Filter(must=conditions)
 
     # Search in Qdrant
     search_results = qdrant_manager.search_vectors(
         query_vector=query_embedding,
-        limit=limit
+        limit=limit,
+        query_filter=_filter # Apply filter here
     )
 
     # Extract relevant segments and their metadata
@@ -52,14 +74,26 @@ async def generate_openai_chat_completion(
     return response.choices[0].message.content
 
 
-async def generate_rag_response(query_text: str, context_segments: List[Dict[str, Any]]) -> str:
+async def generate_rag_response(
+    query_text: str, 
+    context_segments: List[Dict[str, Any]], 
+    selected_text: Optional[str] = None
+) -> str:
     """
     Assembles context and generates an assistant response using an LLM.
+    Incorporates selected_text with higher priority if available.
     """
     context = "\n\n".join([seg["text"] for seg in context_segments])
     
+    system_prompt = "You are a helpful assistant that answers questions based on the provided book content context."
+    
+    if selected_text:
+        system_prompt += f" If the user has provided specific 'selected_text', answer using ONLY this text: '{selected_text}' unless the user explicitly requests additional context. If the answer is not in the selected text, say 'I cannot answer this question based on the selected text.' Otherwise, use the broader context."
+    else:
+        system_prompt += " If the answer is not in the context, say 'I cannot answer this question based on the provided context.'"
+
     messages = [
-        {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided book content context. If the answer is not in the context, say 'I cannot answer this question based on the provided context.'"},
+        {"role": "system", "content": system_prompt},
         {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query_text}"}
     ]
 
@@ -69,4 +103,9 @@ async def generate_rag_response(query_text: str, context_segments: List[Dict[str
     #     # Claude chat completion logic here
     #     pass
     else:
-        return f"Based on the context:\n{context}\n\nYour question was: '{query_text}'. (This is a dummy RAG response due to unsupported LLM provider)"
+        # Fallback for unsupported LLM provider, including selected_text in response if available
+        response_content = f"Based on the context:\n{context}\n\n"
+        if selected_text:
+            response_content += f"Selected Text: '{selected_text}'\n\n"
+        response_content += f"Your question was: '{query_text}'. (This is a dummy RAG response due to unsupported LLM provider)"
+        return response_content
