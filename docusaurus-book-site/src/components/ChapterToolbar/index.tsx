@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   TransformationState,
   TransformationType,
@@ -10,30 +10,66 @@ import ContentOverlay from './ContentOverlay';
 import styles from './styles.module.css';
 
 /**
+ * Get the content container element
+ */
+function getContentContainer(): HTMLElement | null {
+  const selectors = [
+    '.theme-doc-markdown',
+    '[class*="docItemContent"]',
+    'article .markdown',
+    'article',
+  ];
+
+  for (const selector of selectors) {
+    const element = document.querySelector(selector) as HTMLElement;
+    if (element) {
+      return element;
+    }
+  }
+  return null;
+}
+
+/**
  * ChapterToolbar Component
  *
  * Renders a toolbar at the top of each documentation chapter with:
  * - Personalize button: Adapts content to user's background (Software/Hardware)
- * - Translate button: Translates content to Urdu
+ * - Translate button: Translates content to Urdu (displayed inline)
  *
- * Manages the transformation state and content overlay display.
+ * Manages the transformation state and content display.
  */
 export default function ChapterToolbar(): JSX.Element {
   const [transformState, setTransformState] = useState<TransformationState>(
     INITIAL_TRANSFORMATION_STATE
   );
+  const contentContainerRef = useRef<HTMLElement | null>(null);
+  const translatedContentRef = useRef<HTMLDivElement | null>(null);
 
   /**
    * Called when a transformation starts.
    */
   const handleTransformStart = useCallback((type: TransformationType) => {
+    const isTranslate = type === 'translate';
+
+    // For translation, store original content and prepare inline display
+    let originalContent: string | null = null;
+    if (isTranslate) {
+      const container = getContentContainer();
+      if (container) {
+        originalContent = container.innerHTML;
+        contentContainerRef.current = container;
+      }
+    }
+
     setTransformState({
       status: 'loading',
       type,
       content: '',
       error: null,
-      showOverlay: true,
-      isRtl: type === 'translate',
+      showOverlay: !isTranslate, // Only show overlay for personalization
+      isRtl: isTranslate,
+      showInline: isTranslate,
+      originalContent,
     });
   }, []);
 
@@ -77,10 +113,22 @@ export default function ChapterToolbar(): JSX.Element {
   }, []);
 
   /**
+   * Restore original content (for translation).
+   */
+  const handleShowOriginal = useCallback(() => {
+    if (contentContainerRef.current && transformState.originalContent) {
+      contentContainerRef.current.innerHTML = transformState.originalContent;
+      contentContainerRef.current.removeAttribute('dir');
+      contentContainerRef.current.style.fontFamily = '';
+      contentContainerRef.current.style.lineHeight = '';
+    }
+    setTransformState(INITIAL_TRANSFORMATION_STATE);
+  }, [transformState.originalContent]);
+
+  /**
    * Retry the last transformation.
    */
   const handleRetry = useCallback(() => {
-    // Reset to allow retrying - the button will handle the actual retry
     setTransformState((prev) => ({
       ...prev,
       status: 'idle',
@@ -89,7 +137,86 @@ export default function ChapterToolbar(): JSX.Element {
     }));
   }, []);
 
+  /**
+   * Update inline content when translation streams in.
+   */
+  useEffect(() => {
+    if (transformState.showInline && contentContainerRef.current) {
+      const container = contentContainerRef.current;
+
+      if (transformState.status === 'loading' && !transformState.content) {
+        // Show loading state
+        container.innerHTML = `
+          <div class="${styles.inlineLoading}">
+            <div class="${styles.spinner}"></div>
+            <p>اردو میں ترجمہ ہو رہا ہے...</p>
+            <p style="font-size: 0.9rem; opacity: 0.7;">Translating to Urdu...</p>
+          </div>
+        `;
+        container.setAttribute('dir', 'rtl');
+        container.style.fontFamily = "'Noto Nastaliq Urdu', serif";
+      } else if (transformState.content) {
+        // Convert plain text with line breaks to proper HTML paragraphs
+        const formattedContent = transformState.content
+          .split(/\n\n+/)
+          .map(para => para.trim())
+          .filter(para => para.length > 0)
+          .map(para => {
+            // Check if it's a heading (starts with #)
+            if (para.startsWith('# ')) {
+              return `<h1>${para.substring(2)}</h1>`;
+            } else if (para.startsWith('## ')) {
+              return `<h2>${para.substring(3)}</h2>`;
+            } else if (para.startsWith('### ')) {
+              return `<h3>${para.substring(4)}</h3>`;
+            } else if (para.startsWith('#### ')) {
+              return `<h4>${para.substring(5)}</h4>`;
+            } else if (para.startsWith('- ') || para.startsWith('* ')) {
+              // Handle list items
+              const items = para.split(/\n/).map(item =>
+                `<li>${item.replace(/^[-*]\s*/, '')}</li>`
+              ).join('');
+              return `<ul>${items}</ul>`;
+            } else if (/^\d+\.\s/.test(para)) {
+              // Handle numbered lists
+              const items = para.split(/\n/).map(item =>
+                `<li>${item.replace(/^\d+\.\s*/, '')}</li>`
+              ).join('');
+              return `<ol>${items}</ol>`;
+            } else if (para.startsWith('```')) {
+              // Handle code blocks
+              const code = para.replace(/^```\w*\n?/, '').replace(/```$/, '');
+              return `<pre><code>${code}</code></pre>`;
+            } else {
+              return `<p>${para.replace(/\n/g, '<br/>')}</p>`;
+            }
+          })
+          .join('\n');
+
+        container.innerHTML = `
+          <div class="${styles.translatedContent}" dir="rtl">
+            ${formattedContent}
+            ${transformState.status === 'streaming' ? `<span class="${styles.cursor}">▋</span>` : ''}
+          </div>
+        `;
+        container.setAttribute('dir', 'rtl');
+        container.style.fontFamily = "'Noto Nastaliq Urdu', serif";
+        container.style.lineHeight = '2.2';
+      }
+
+      if (transformState.status === 'error') {
+        container.innerHTML = `
+          <div class="${styles.inlineError}">
+            <p>⚠️ ${transformState.error || 'Translation failed'}</p>
+            <button onclick="window.location.reload()">Refresh Page</button>
+          </div>
+        `;
+      }
+    }
+  }, [transformState]);
+
   const isProcessing = transformState.status === 'loading' || transformState.status === 'streaming';
+  const showRestoreButton = transformState.showInline && (transformState.status === 'streaming' || transformState.status === 'complete');
 
   return (
     <>
@@ -102,13 +229,24 @@ export default function ChapterToolbar(): JSX.Element {
             onTransformError={handleTransformError}
             disabled={isProcessing}
           />
-          <TranslateButton
-            onTransformStart={handleTransformStart}
-            onContentChunk={handleContentChunk}
-            onTransformComplete={handleTransformComplete}
-            onTransformError={handleTransformError}
-            disabled={isProcessing}
-          />
+          {showRestoreButton ? (
+            <button
+              className={`${styles.toolbarButton} ${styles.restoreButton}`}
+              onClick={handleShowOriginal}
+              type="button"
+            >
+              <span className={styles.buttonIcon}>↩️</span>
+              <span className={styles.buttonText}>Show Original</span>
+            </button>
+          ) : (
+            <TranslateButton
+              onTransformStart={handleTransformStart}
+              onContentChunk={handleContentChunk}
+              onTransformComplete={handleTransformComplete}
+              onTransformError={handleTransformError}
+              disabled={isProcessing}
+            />
+          )}
         </div>
       </div>
 

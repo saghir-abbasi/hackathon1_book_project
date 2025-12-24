@@ -24,10 +24,14 @@ export interface TransformationState {
   content: string;
   /** Error message if transformation failed */
   error: string | null;
-  /** Whether to show the content overlay */
+  /** Whether to show the content overlay (for personalization) */
   showOverlay: boolean;
   /** Whether the content is RTL (for Urdu) */
   isRtl: boolean;
+  /** Whether to show content inline (replacing original) */
+  showInline: boolean;
+  /** Original HTML content to restore */
+  originalContent: string | null;
 }
 
 /**
@@ -40,6 +44,8 @@ export const INITIAL_TRANSFORMATION_STATE: TransformationState = {
   error: null,
   showOverlay: false,
   isRtl: false,
+  showInline: false,
+  originalContent: null,
 };
 
 /**

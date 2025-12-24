@@ -384,6 +384,144 @@
   border-color: #ff6b6b;
 }
 
+/* Restore Button */
+.restoreButton {
+  color: #00ff88;
+  border-color: rgba(0, 255, 136, 0.5);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.1) 0%,
+    rgba(0, 150, 80, 0.2) 100%
+  );
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2),
+    inset 0 0 15px rgba(0, 255, 136, 0.1);
+}
+
+.restoreButton:hover:not(:disabled) {
+  border-color: #00ff88;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.2) 0%,
+    rgba(0, 200, 100, 0.3) 100%
+  );
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.4),
+    inset 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+/* Inline Translation Styles */
+.inlineLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  font-family: 'Noto Nastaliq Urdu', serif;
+  color: var(--ifm-color-content);
+}
+
+.inlineLoading p {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.translatedContent {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Noto Nastaliq Urdu', serif;
+  line-height: 2.2;
+  font-size: 1.1rem;
+}
+
+.translatedContent h1,
+.translatedContent h2,
+.translatedContent h3,
+.translatedContent h4 {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.translatedContent h1 {
+  font-size: 2rem;
+  border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.translatedContent h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  padding-bottom: 0.3rem;
+}
+
+.translatedContent h3 {
+  font-size: 1.3rem;
+}
+
+.translatedContent h4 {
+  font-size: 1.1rem;
+}
+
+.translatedContent p {
+  margin-bottom: 1.2rem;
+  text-align: right;
+}
+
+.translatedContent ul,
+.translatedContent ol {
+  padding-right: 2rem;
+  padding-left: 0;
+  margin-bottom: 1.2rem;
+}
+
+.translatedContent li {
+  margin-bottom: 0.5rem;
+  text-align: right;
+}
+
+.translatedContent pre {
+  direction: ltr;
+  text-align: left;
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.translatedContent code {
+  direction: ltr;
+  font-family: monospace;
+}
+
+.inlineError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  text-align: center;
+  color: #ff6b6b;
+}
+
+.inlineError button {
+  margin-top: 1rem;
+  padding: 0.75rem 2rem;
+  background: rgba(255, 100, 100, 0.1);
+  border: 2px solid rgba(255, 100, 100, 0.5);
+  border-radius: 8px;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.inlineError button:hover {
+  background: rgba(255, 100, 100, 0.2);
+  border-color: #ff6b6b;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .toolbar {
