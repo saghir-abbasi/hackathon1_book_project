@@ -497,6 +497,75 @@
   font-family: monospace;
 }
 
+/* Personalized Content Styles */
+.personalizedContent {
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.personalizedContent h1,
+.personalizedContent h2,
+.personalizedContent h3,
+.personalizedContent h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--ifm-heading-color);
+}
+
+.personalizedContent h1 {
+  font-size: 2rem;
+  border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.personalizedContent h2 {
+  font-size: 1.6rem;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  padding-bottom: 0.3rem;
+}
+
+.personalizedContent h3 {
+  font-size: 1.3rem;
+}
+
+.personalizedContent h4 {
+  font-size: 1.1rem;
+}
+
+.personalizedContent p {
+  margin-bottom: 1.2rem;
+}
+
+.personalizedContent ul,
+.personalizedContent ol {
+  padding-left: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+.personalizedContent li {
+  margin-bottom: 0.5rem;
+}
+
+.personalizedContent pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.personalizedContent code {
+  font-family: monospace;
+  background: rgba(0, 255, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+.personalizedContent pre code {
+  background: none;
+  padding: 0;
+}
+
 .inlineError {
   display: flex;
   flex-direction: column;

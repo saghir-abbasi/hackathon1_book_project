@@ -51,14 +51,12 @@ export default function ChapterToolbar(): JSX.Element {
   const handleTransformStart = useCallback((type: TransformationType) => {
     const isTranslate = type === 'translate';
 
-    // For translation, store original content and prepare inline display
+    // Store original content for both translation and personalization
     let originalContent: string | null = null;
-    if (isTranslate) {
-      const container = getContentContainer();
-      if (container) {
-        originalContent = container.innerHTML;
-        contentContainerRef.current = container;
-      }
+    const container = getContentContainer();
+    if (container) {
+      originalContent = container.innerHTML;
+      contentContainerRef.current = container;
     }
 
     setTransformState({
@@ -66,9 +64,9 @@ export default function ChapterToolbar(): JSX.Element {
       type,
       content: '',
       error: null,
-      showOverlay: !isTranslate, // Only show overlay for personalization
+      showOverlay: false, // Always use inline display
       isRtl: isTranslate,
-      showInline: isTranslate,
+      showInline: true, // Both translation and personalization are inline
       originalContent,
     });
   }, []);
@@ -138,23 +136,36 @@ export default function ChapterToolbar(): JSX.Element {
   }, []);
 
   /**
-   * Update inline content when translation streams in.
+   * Update inline content when transformation streams in.
    */
   useEffect(() => {
     if (transformState.showInline && contentContainerRef.current) {
       const container = contentContainerRef.current;
+      const isTranslation = transformState.type === 'translate';
 
       if (transformState.status === 'loading' && !transformState.content) {
         // Show loading state
-        container.innerHTML = `
-          <div class="${styles.inlineLoading}">
-            <div class="${styles.spinner}"></div>
-            <p>اردو میں ترجمہ ہو رہا ہے...</p>
-            <p style="font-size: 0.9rem; opacity: 0.7;">Translating to Urdu...</p>
-          </div>
-        `;
-        container.setAttribute('dir', 'rtl');
-        container.style.fontFamily = "'Noto Nastaliq Urdu', serif";
+        if (isTranslation) {
+          container.innerHTML = `
+            <div class="${styles.inlineLoading}">
+              <div class="${styles.spinner}"></div>
+              <p>اردو میں ترجمہ ہو رہا ہے...</p>
+              <p style="font-size: 0.9rem; opacity: 0.7;">Translating to Urdu...</p>
+            </div>
+          `;
+          container.setAttribute('dir', 'rtl');
+          container.style.fontFamily = "'Noto Nastaliq Urdu', serif";
+        } else {
+          container.innerHTML = `
+            <div class="${styles.inlineLoading}">
+              <div class="${styles.spinner}"></div>
+              <p>Personalizing content for your background...</p>
+              <p style="font-size: 0.9rem; opacity: 0.7;">This may take a moment</p>
+            </div>
+          `;
+          container.removeAttribute('dir');
+          container.style.fontFamily = '';
+        }
       } else if (transformState.content) {
         // Convert plain text with line breaks to proper HTML paragraphs
         const formattedContent = transformState.content
@@ -193,21 +204,34 @@ export default function ChapterToolbar(): JSX.Element {
           })
           .join('\n');
 
-        container.innerHTML = `
-          <div class="${styles.translatedContent}" dir="rtl">
-            ${formattedContent}
-            ${transformState.status === 'streaming' ? `<span class="${styles.cursor}">▋</span>` : ''}
-          </div>
-        `;
-        container.setAttribute('dir', 'rtl');
-        container.style.fontFamily = "'Noto Nastaliq Urdu', serif";
-        container.style.lineHeight = '2.2';
+        if (isTranslation) {
+          container.innerHTML = `
+            <div class="${styles.translatedContent}" dir="rtl">
+              ${formattedContent}
+              ${transformState.status === 'streaming' ? `<span class="${styles.cursor}">▋</span>` : ''}
+            </div>
+          `;
+          container.setAttribute('dir', 'rtl');
+          container.style.fontFamily = "'Noto Nastaliq Urdu', serif";
+          container.style.lineHeight = '2.2';
+        } else {
+          container.innerHTML = `
+            <div class="${styles.personalizedContent}">
+              ${formattedContent}
+              ${transformState.status === 'streaming' ? `<span class="${styles.cursor}">▋</span>` : ''}
+            </div>
+          `;
+          container.removeAttribute('dir');
+          container.style.fontFamily = '';
+          container.style.lineHeight = '';
+        }
       }
 
       if (transformState.status === 'error') {
+        const errorType = isTranslation ? 'Translation' : 'Personalization';
         container.innerHTML = `
           <div class="${styles.inlineError}">
-            <p>⚠️ ${transformState.error || 'Translation failed'}</p>
+            <p>⚠️ ${transformState.error || `${errorType} failed`}</p>
             <button onclick="window.location.reload()">Refresh Page</button>
           </div>
         `;
