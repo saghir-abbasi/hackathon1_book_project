@@ -1,0 +1,416 @@
+/**
+ * ChapterToolbar Styles
+ * Robotics/Neon Cyberpunk Theme
+ */
+
+/* Toolbar Container */
+.toolbar {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 20, 40, 0.8) 0%,
+    rgba(0, 10, 20, 0.4) 100%
+  );
+}
+
+.toolbarContent {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Toolbar Buttons */
+.toolbarButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #00ffff;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 255, 0.1) 0%,
+    rgba(0, 150, 150, 0.2) 100%
+  );
+  border: 2px solid rgba(0, 255, 255, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2),
+    inset 0 0 15px rgba(0, 255, 255, 0.1);
+}
+
+.toolbarButton:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 255, 0.2) 0%,
+    rgba(0, 200, 200, 0.3) 100%
+  );
+  border-color: #00ffff;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.4),
+    inset 0 0 20px rgba(0, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.toolbarButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(50%);
+}
+
+.translateButton {
+  color: #ff00ff;
+  border-color: rgba(255, 0, 255, 0.5);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 255, 0.1) 0%,
+    rgba(150, 0, 150, 0.2) 100%
+  );
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.2),
+    inset 0 0 15px rgba(255, 0, 255, 0.1);
+  font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+.translateButton:hover:not(:disabled) {
+  border-color: #ff00ff;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 255, 0.2) 0%,
+    rgba(200, 0, 200, 0.3) 100%
+  );
+  box-shadow: 0 0 25px rgba(255, 0, 255, 0.4),
+    inset 0 0 20px rgba(255, 0, 255, 0.2);
+}
+
+.buttonIcon {
+  font-size: 1.2rem;
+}
+
+.buttonText {
+  white-space: nowrap;
+}
+
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 25, 47, 0.98) 0%,
+    rgba(5, 15, 30, 0.98) 100%
+  );
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.2),
+    inset 0 0 30px rgba(0, 255, 255, 0.05);
+}
+
+.modalTitle {
+  color: #00ffff;
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.modalDescription {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.modalOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.optionButton {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.25rem;
+  background: rgba(0, 255, 255, 0.05);
+  border: 2px solid rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.optionButton:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.optionIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.optionLabel {
+  color: #00ffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.optionDescription {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.modalCloseButton {
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalCloseButton:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+/* Content Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(5, 15, 30, 0.98);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.overlayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+  background: rgba(0, 20, 40, 0.5);
+}
+
+.overlayTitle {
+  color: #00ffff;
+  font-size: 1.25rem;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: #ff4444;
+}
+
+.overlayContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.overlayFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-top: 1px solid rgba(0, 255, 255, 0.2);
+  background: rgba(0, 20, 40, 0.5);
+}
+
+.closeFooterButton {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 255, 0.1) 0%,
+    rgba(0, 150, 150, 0.2) 100%
+  );
+  border: 2px solid rgba(0, 255, 255, 0.5);
+  border-radius: 8px;
+  color: #00ffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.closeFooterButton:hover {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: #00ffff;
+}
+
+.completeIndicator {
+  color: #00ff88;
+  font-weight: 600;
+}
+
+/* Content Body */
+.contentBody {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.8;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+
+/* RTL Content for Urdu */
+.rtlContent {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 1.2rem;
+  line-height: 2.2;
+}
+
+.rtlText {
+  direction: rtl;
+  font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+/* Streaming cursor */
+.cursor {
+  animation: blink 1s infinite;
+  color: #00ffff;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Loading State */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 255, 255, 0.2);
+  border-top-color: #00ffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Error State */
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.errorText {
+  color: #ff6b6b;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.retryButton {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 100, 100, 0.1) 0%,
+    rgba(150, 50, 50, 0.2) 100%
+  );
+  border: 2px solid rgba(255, 100, 100, 0.5);
+  border-radius: 8px;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retryButton:hover {
+  background: rgba(255, 100, 100, 0.2);
+  border-color: #ff6b6b;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 0.75rem;
+  }
+
+  .toolbarContent {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .toolbarButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .overlayHeader,
+  .overlayFooter {
+    padding: 1rem;
+  }
+
+  .overlayContent {
+    padding: 1rem;
+  }
+}

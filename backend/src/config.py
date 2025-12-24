@@ -1,3 +1,4 @@
+import json
 import os
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -11,8 +12,34 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "RAG Chatbot Backend API"
     PROJECT_VERSION: str = "1.0.0"
 
-    # CORS origins
-    CORS_ORIGINS: List[str] = ["http://localhost:3000"] # Default for local Docusaurus
+    # CORS origins - load from environment variable or use defaults
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",           # Local Docusaurus development
+        "http://localhost:3001",           # Alternative Docusaurus port
+        "https://localhost:3000",          # HTTPS local development
+        "https://localhost:3001",          # HTTPS alternative port
+        "https://book-project-backend.vercel.app",  # Backend deployment (for testing)
+        "https://your-username.github.io", # Replace with your actual GitHub Pages URL
+        "https://*.vercel.app"             # For Vercel deployments
+    ]
+
+    @property
+    def cors_origins(self) -> List[str]:
+        """Get CORS origins from environment variable or use defaults."""
+        cors_env = os.getenv("CORS_ORIGINS")
+        if cors_env:
+            # Handle both JSON array format and comma-separated string format
+            cors_env = cors_env.strip()
+            if cors_env.startswith('[') and cors_env.endswith(']'):
+                # Try to parse as JSON array
+                try:
+                    return json.loads(cors_env)
+                except json.JSONDecodeError:
+                    # If JSON parsing fails, fall back to comma-separated parsing
+                    pass
+            # Parse as comma-separated values
+            return [origin.strip() for origin in cors_env.split(",")]
+        return self.CORS_ORIGINS
     
     # Qdrant configuration
     QDRANT_HOST: str
@@ -23,7 +50,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
 
     # Embedding Model Configuration
-    EMBEDDING_MODEL_PROVIDER: str = "openai" # "openai" or "claude"
+    EMBEDDING_MODEL_PROVIDER: str = "gemini" # "gemini", "openai", or "claude"
+    GEMINI_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     CLAUDE_API_KEY: Optional[str] = None
 

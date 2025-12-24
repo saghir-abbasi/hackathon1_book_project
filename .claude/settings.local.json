@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wmic process where \"name=''python.exe''\" get processid)",
+      "Bash(taskkill /F /IM python.exe /T)",
+      "Bash(dir .env)",
+      "Bash(python -c \"from src.main import app; print(''App imported successfully'')\")",
+      "Bash(set)",
+      "Bash(printenv)",
+      "Bash(CORS_ORIGINS=\"\" python -c \"from src.main import app; print(''App imported successfully'')\")",
+      "Bash(uvicorn src.main:app --host 0.0.0.0 --port 8000)",
+      "Bash(curl http://localhost:8000/)",
+      "Bash(npm run start)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(taskkill /PID 66304 /F)",
+      "Bash(taskkill /F /PID 66304)",
+      "Bash(npx docusaurus clear)",
+      "Bash(curl -I http://localhost:3000/)",
+      "Bash(taskkill /F /PID 66764)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

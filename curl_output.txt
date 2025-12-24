@@ -1,0 +1,9 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   128    0     0  100   128      0     94  0:00:01  0:00:01 --:--:--    94100   571    0   443  100   128    231     66  0:00:01  0:00:01 --:--:--   298data: {"token": "{\"token\": \"Please\"}\n\n"}\n
+data: {"token": "{\"token\": \" provide me with the context about the book. I need information such as the book\"}\n\n"}\n
+data: {"token": "{\"token\": \"'s title, a description, or some text from the book to tell you what it\"}\n\n"}\n
+data: {"token": "{\"token\": \" is about.\\n\"}\n\n"}\n
+data: {"token": "{\"event\": \"end\", \"token\": \"\"}\n\n"}\n
+data: {"event": "end", "token": ""}\n
+

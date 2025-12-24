@@ -20,18 +20,30 @@ interface ChatWindowProps {
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose, messages, isThinking, onSendMessage }) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (messagesTopRef.current) {
+      messagesTopRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  // Group messages into question-answer pairs and reverse the pairs
+  // So newest Q&A pair appears at top, but question is before answer within each pair
+  const getReversedPairs = () => {
+    const pairs: Message[][] = [];
+    for (let i = 0; i < messages.length; i += 2) {
+      const pair = messages.slice(i, i + 2);
+      pairs.push(pair);
+    }
+    // Reverse pairs so newest is first, then flatten
+    return pairs.reverse().flat();
+  };
+  const reversedMessages = getReversedPairs();
 
   return (
     <div className={clsx(styles.chatWindow, isOpen && styles.chatWindowOpen)}>
       <div className={styles.chatHeader}>
-        <h3 className={styles.chatTitle}>AI Assistant</h3>
         <button className={styles.chatCloseButton} onClick={onClose} aria-label="Close chat">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,15 +59,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ isOpen, onClose, messages, isTh
           </svg>
         </button>
       </div>
-      <div className={styles.chatMessages} ref={messagesEndRef}>
-        {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} />
-        ))}
+      <div className={styles.chatMessages}>
+        <div ref={messagesTopRef} />
         {isThinking && (
           <div className={styles.thinkingIndicator}>
             <span>.</span><span>.</span><span>.</span>
           </div>
         )}
+        {reversedMessages.map((msg) => (
+          <ChatMessage key={msg.id} message={msg} />
+        ))}
       </div>
       <div className={styles.chatInputContainer}>
         <ChatInput onSendMessage={onSendMessage} isThinking={isThinking} />

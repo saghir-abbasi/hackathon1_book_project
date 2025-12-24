@@ -1,5 +1,6 @@
-from backend.src.db.database import SessionLocal, engine, Base, create_session, get_session, add_chat_message, get_chat_history
-from backend.src.models.db_models import UserSession, ChatMessage
+from src.db.database import SessionLocal, engine, create_session, get_session, add_chat_message, get_chat_history
+from src.db.base_class import Base # Import Base from its new location
+from src.models.db_models import UserSession, ChatMessage
 import pytest
 from sqlalchemy.orm import Session
 import uuid

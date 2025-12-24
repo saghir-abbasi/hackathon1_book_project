@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
-from backend.src.main import app
-from backend.src.models.query_models import QueryRequest
+from src.main import app
+from src.models.query_models import QueryRequest
 from unittest.mock import patch, AsyncMock
 import pytest
 from qdrant_client.models import PointStruct, ScoredPoint
@@ -10,8 +10,8 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def mock_dependencies_for_query():
-    with patch('backend.src.api.query_router.qdrant_manager') as mock_qdrant_manager, \
-         patch('backend.src.api.query_router.generate_embeddings') as mock_generate_embeddings:
+    with patch('src.api.query_router.qdrant_manager') as mock_qdrant_manager, \
+         patch('src.api.query_router.generate_embeddings') as mock_generate_embeddings:
         
         # Mock QdrantManager.search_vectors
         mock_qdrant_manager.search_vectors.return_value = [
@@ -28,7 +28,7 @@ def mock_dependencies_for_query():
         ]
 
         # Mock embedding generation for the query
-        mock_generate_embeddings.return_value = [[0.5]*1536] # Dummy query embedding
+        mock_generate_embeddings.return_value = [[0.5]*768] # Gemini's embedding size
 
         yield {
             "mock_qdrant_manager": mock_qdrant_manager,
@@ -50,7 +50,7 @@ def test_query_book_content_success(mock_dependencies_for_query):
     assert response_data["results"][0]["score"] == 0.9
 
     mock_dependencies_for_query["mock_generate_embeddings"].assert_called_once_with(
-        [request_data.question], "openai" # Assuming default openai
+        [request_data.question], "gemini"
     )
     mock_dependencies_for_query["mock_qdrant_manager"].search_vectors.assert_called_once()
 

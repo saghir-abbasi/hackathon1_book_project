@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 import os
-import openai # Assuming OpenAI as primary, will handle Claude via model_provider later
+import google.generativeai as genai
 # import anthropic # if using Claude
 from ..config import settings
 from tenacity import retry, wait_random_exponential, stop_after_attempt # For retry logic
@@ -37,37 +37,27 @@ def chunk_text(text: str, chunk_size: int = 500, chunk_overlap: int = 50) -> Lis
     return chunks
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
-async def generate_openai_embeddings(texts: List[str]) -> List[List[float]]:
-    """Generates embeddings for a list of texts using OpenAI API."""
-    if not settings.OPENAI_API_KEY:
-        raise ValueError("OPENAI_API_KEY is not set in environment variables.")
+async def generate_gemini_embeddings(texts: List[str]) -> List[List[float]]:
+    """Generates embeddings for a list of texts using the Gemini API."""
+    if not settings.GEMINI_API_KEY:
+        raise ValueError("GEMINI_API_KEY is not set in environment variables.")
     
-    openai.api_key = settings.OPENAI_API_KEY
-    model = "text-embedding-ada-002" # Or other appropriate model
+    genai.configure(api_key=settings.GEMINI_API_KEY)
+    model = "models/text-embedding-004" # The recommended model for text embeddings
 
-    response = await openai.Embedding.acreate(
-        input=texts,
-        model=model
+    result = await genai.embed_content_async(
+        model=model,
+        content=texts,
+        task_type="retrieval_document"
     )
-    return [d["embedding"] for d in response["data"]]
-
-# @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
-# async def generate_claude_embeddings(texts: List[str]) -> List[List[float]]:
-#     """Generates embeddings for a list of texts using Claude API."""
-#     if not settings.CLAUDE_API_KEY:
-#         raise ValueError("CLAUDE_API_KEY is not set in environment variables.")
-#     # Anthropic client initialization and embedding call would go here
-#     # This is a placeholder as Claude API for embeddings is not as direct as OpenAI
-#     # and often requires more context for a full RAG implementation (e.g., via their messages API)
-#     raise NotImplementedError("Claude embedding generation not directly supported yet via a simple API call like OpenAI's.")
-
+    return result['embedding']
 
 async def generate_embeddings(texts: List[str], model_provider: str) -> List[List[float]]:
     """Generates embeddings for a list of texts using the specified model provider."""
-    if model_provider.lower() == "openai":
-        return await generate_openai_embeddings(texts)
-    # elif model_provider.lower() == "claude":
-    #     return await generate_claude_embeddings(texts) # Uncomment when Claude embedding is implemented
+    if model_provider.lower() == "gemini":
+        return await generate_gemini_embeddings(texts)
+    elif model_provider.lower() == "openai":
+        raise NotImplementedError("OpenAI embeddings are no longer supported. Please use 'gemini'.")
     else:
         raise ValueError(f"Unsupported embedding model provider: {model_provider}")
 

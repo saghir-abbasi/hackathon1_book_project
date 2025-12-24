@@ -8,10 +8,18 @@ from qdrant_client.models import PointStruct, FieldCondition, Filter, MatchValue
 from tenacity import retry, wait_random_exponential, stop_after_attempt
 
 
+def _is_placeholder_value(value: Optional[str]) -> bool:
+    """Check if a value is a placeholder that should be ignored."""
+    if not value:
+        return True
+    placeholder_indicators = ['placeholder', 'unknown', 'test', 'dummy']
+    return any(indicator in value.lower() for indicator in placeholder_indicators)
+
+
 async def retrieve_relevant_segments(
-    query_text: str, 
-    limit: int = 5, 
-    chapter_id: Optional[str] = None, 
+    query_text: str,
+    limit: int = 5,
+    chapter_id: Optional[str] = None,
     section_id: Optional[str] = None,
     selected_text: Optional[str] = None # Added selected_text
 ) -> List[Dict[str, Any]]:
@@ -27,20 +35,22 @@ async def retrieve_relevant_segments(
     # Generate embedding for the effective query
     query_embedding = (await generate_embeddings([effective_query_text], settings.EMBEDDING_MODEL_PROVIDER))[0]
 
+    # Build filter only for non-placeholder values
     _filter = None
-    if chapter_id or section_id:
-        conditions = []
-        if chapter_id:
-            conditions.append(FieldCondition(key="chapter_id", match=MatchValue(value=chapter_id)))
-        if section_id:
-            conditions.append(FieldCondition(key="section_id", match=MatchValue(value=section_id)))
+    conditions = []
+    if chapter_id and not _is_placeholder_value(chapter_id):
+        conditions.append(FieldCondition(key="chapter_id", match=MatchValue(value=chapter_id)))
+    if section_id and not _is_placeholder_value(section_id):
+        conditions.append(FieldCondition(key="section_id", match=MatchValue(value=section_id)))
+
+    if conditions:
         _filter = Filter(must=conditions)
 
     # Search in Qdrant
     search_results = qdrant_manager.search_vectors(
         query_vector=query_embedding,
         limit=limit,
-        query_filter=_filter # Apply filter here
+        query_filter=_filter # Apply filter here (None if no valid filters)
     )
 
     # Extract relevant segments and their metadata

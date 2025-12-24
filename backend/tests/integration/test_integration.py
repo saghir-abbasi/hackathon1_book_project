@@ -1,14 +1,17 @@
 from fastapi.testclient import TestClient
-from backend.src.main import app
-from backend.src.config import settings
-from backend.src.db.qdrant_client import QdrantManager
-from backend.src.db.database import create_db_and_tables, SessionLocal, engine, Base
-from backend.src.models.embed_models import EmbedRequest, ContentChunk
-from backend.src.models.query_models import QueryRequest
-from backend.src.models.chat_models import ChatRequest
+from src.main import app
+from src.config import settings
+from src.db.qdrant_client import QdrantManager
+from src.db.database import create_db_and_tables, SessionLocal, engine, get_db
+from src.db.base_class import Base # Import Base from its new location
+from src.models.embed_models import EmbedRequest, ContentChunk
+from src.models.query_models import QueryRequest
+from src.models.chat_models import ChatRequest
+from src.models.db_models import UserSession, ChatMessage # Import UserSession, ChatMessage
 import pytest
 import os
 import time
+import uuid # Add uuid import
 from unittest.mock import patch, AsyncMock
 
 client = TestClient(app)
@@ -27,7 +30,7 @@ def qdrant_test_manager():
         manager.client.delete_collection(collection_name=manager.collection_name)
     except Exception:
         pass # Collection might not exist
-    manager.create_collection_if_not_exists(vector_size=1536) # Assuming common embedding size
+    manager.create_collection_if_not_exists(vector_size=768) # Gemini's embedding size
     yield manager
     # Clean up collection after tests
     manager.client.delete_collection(collection_name=manager.collection_name)
@@ -52,9 +55,9 @@ def db_test_session():
 # Fixture to mock embedding generation for faster tests
 @pytest.fixture(autouse=True)
 def mock_embedding_generation():
-    with patch('backend.src.core.embeddings.generate_openai_embeddings') as mock_openai_embeddings:
-        mock_openai_embeddings.return_value = [[0.1] * 1536 for _ in range(2)] # Return dummy embeddings for 2 texts
-        yield mock_openai_embeddings
+    with patch('src.core.embeddings.generate_gemini_embeddings') as mock_gemini_embeddings:
+        mock_gemini_embeddings.return_value = [[0.1] * 768 for _ in range(2)] # Return dummy embeddings for 2 texts
+        yield mock_gemini_embeddings
 
 # --- Test Qdrant Connectivity and Embedding ---
 def test_integration_qdrant_embed_and_query(qdrant_test_manager: QdrantManager, mock_embedding_generation):
@@ -125,7 +128,7 @@ def test_integration_chat_end_to_end_mocked_llm(qdrant_test_manager: QdrantManag
     app.dependency_overrides[get_db] = lambda: db_test_session
     
     # Mock RAG service components for chat endpoint specifically
-    with patch('backend.src.services.rag_service.generate_rag_response') as mock_generate_rag:
+    with patch('src.services.rag_service.generate_rag_response') as mock_generate_rag:
         mock_generate_rag.return_value = "Mocked LLM final answer."
 
         user_message = "Tell me about RAG."

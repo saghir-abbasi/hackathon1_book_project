@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: AI Assistant Streaming API
+  version: 1.0.0
+  description: API for streaming responses from the AI Assistant.
+
+servers:
+  - url: /
+    description: Base URL for the API
+
+paths:
+  /agent/stream:
+    post:
+      summary: Stream AI Assistant responses
+      operationId: streamAgentResponse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentQueryInput'
+      responses:
+        '200':
+          description: A stream of AI Assistant tokens.
+          content:
+            text/event-stream: # Server-Sent Events
+              schema:
+                $ref: '#/components/schemas/AgentResponseStream'
+            application/json: # Chunked JSON stream (alternative)
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentResponseToken'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    AgentQueryInput:
+      type: object
+      properties:
+        user_query:
+          type: string
+          description: The natural language question or prompt from the user.
+          example: "What is ROS 2?"
+        selected_text:
+          type: string
+          nullable: true
+          description: Optional text segment highlighted by the user from the frontend.
+          example: "ROS 2 is the Robot Operating System 2"
+        chapter_id:
+          type: string
+          description: Identifier of the book chapter from which the query originated.
+          example: "module-1-ros2-basics"
+        session_id:
+          type: string
+          description: Identifier of the current chat session.
+          example: "chat-12345"
+        last_model_messages:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum: [user, assistant]
+              content:
+                type: string
+          description: The last few messages from the AI assistant in the current session, for context.
+          example: "[{\"role\": \"assistant\", \"content\": \"Hello! How can I help you today?\"}]"
+      required:
+        - user_query
+        - chapter_id
+        - session_id
+
+    AgentResponseStream:
+      type: object
+      properties:
+        event:
+          type: string
+          example: "message"
+        data:
+          type: string
+          description: A single token or a JSON string of AgentResponseToken
+          example: "{\"token\": \"Hello\", \"is_final\": false, \"session_id\": \"chat-12345\"}"
+      required:
+        - event
+        - data
+
+    AgentResponseToken:
+      type: object
+      properties:
+        token:
+          type: string
+          description: A piece of the streamed response.
+          example: "Hello"
+        is_final:
+          type: boolean
+          description: Indicates if this is the last token in the response.
+          example: false
+        session_id:
+          type: string
+          description: Identifier of the chat session this token belongs to.
+          example: "chat-12345"
+        tool_calls:
+          type: array
+          items:
+            type: object
+            properties:
+              function:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  arguments:
+                    type: string
+          description: Optional, structured data indicating if the AI assistant invoked any tools.
+      required:
+        - token
+        - is_final
+        - session_id

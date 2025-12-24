@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
-from backend.src.main import app
-from backend.src.models.chat_models import ChatRequest, ChatMessage
+from src.main import app
+from src.models.chat_models import ChatRequest, ChatMessage
 from unittest.mock import patch, AsyncMock
 import pytest
 from fastapi import status
@@ -11,8 +11,8 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def mock_dependencies_for_chat():
-    with patch('backend.src.api.chat_router.retrieve_relevant_segments') as mock_retrieve_segments, \
-         patch('backend.src.api.chat_router.generate_rag_response') as mock_generate_rag_response:
+    with patch('src.api.chat_router.retrieve_relevant_segments') as mock_retrieve_segments, \
+         patch('src.api.chat_router.generate_rag_response') as mock_generate_rag_response:
         
         # Mock retrieve_relevant_segments
         mock_retrieve_segments.return_value = [

@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import create_engine # Import create_engine
+from sqlalchemy.orm import sessionmaker
+from src.db.base_class import Base # Import Base from the new module
 from ..config import settings
 from ..models.db_models import UserSession, ChatMessage # Import models
 import os
@@ -16,9 +17,6 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # Create a SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base class for declarative models
-Base = declarative_base()
 
 # Dependency to get the database session
 def get_db() -> Generator:
