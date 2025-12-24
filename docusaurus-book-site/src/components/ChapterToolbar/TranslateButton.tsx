@@ -24,11 +24,24 @@ ORIGINAL CONTENT:
  * Extract chapter content from the page.
  */
 function extractChapterContent(): string {
-  const contentElement = document.querySelector('.theme-doc-markdown');
-  if (!contentElement) {
-    throw new Error('Could not find chapter content');
+  // Try multiple selectors for Docusaurus content
+  const selectors = [
+    '.theme-doc-markdown',
+    '[class*="docItemContent"]',
+    'article',
+    '.markdown',
+    'main'
+  ];
+
+  for (const selector of selectors) {
+    const contentElement = document.querySelector(selector);
+    if (contentElement && contentElement.textContent?.trim()) {
+      console.log(`Found content using selector: ${selector}`);
+      return contentElement.textContent;
+    }
   }
-  return contentElement.textContent || '';
+
+  throw new Error('Could not find chapter content. Please try refreshing the page.');
 }
 
 /**
@@ -95,7 +108,11 @@ export default function TranslateButton({
           onTransformComplete();
         },
         onError: (error: Error) => {
+          console.error('Translation error:', error);
           onTransformError(error.message || 'Failed to translate content');
+        },
+        onReconnectAttempt: (attempt: number, delay: number) => {
+          console.log(`Translation reconnect attempt ${attempt} in ${delay}ms...`);
         },
       });
 
