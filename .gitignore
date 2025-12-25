@@ -32,3 +32,4 @@ venv/
 # Node.js / Docusaurus specific ignores
 node_modules/
 .env*
+nul

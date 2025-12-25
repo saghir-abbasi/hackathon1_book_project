@@ -591,6 +591,58 @@
   border-color: #ff6b6b;
 }
 
+/* Navbar Compact Styles */
+.navbarToolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbarButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ifm-navbar-link-color);
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.navbarButton:hover:not(:disabled) {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+.navbarButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.navbarTranslateButton {
+  font-family: 'Noto Nastaliq Urdu', sans-serif;
+}
+
+.navbarButtonIcon {
+  font-size: 0.85rem;
+}
+
+.navbarButtonText {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* Hide navbar toolbar on smaller screens */
+@media (max-width: 996px) {
+  .navbarToolbar {
+    display: none;
+  }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .toolbar {

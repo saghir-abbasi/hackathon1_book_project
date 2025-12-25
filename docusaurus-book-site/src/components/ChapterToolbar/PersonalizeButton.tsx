@@ -88,6 +88,7 @@ export default function PersonalizeButton({
   onTransformComplete,
   onTransformError,
   disabled = false,
+  compact = false,
 }: PersonalizeButtonProps): JSX.Element {
   const { background, hasBackground, setBackground } = useUserPreferences();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -184,14 +185,14 @@ export default function PersonalizeButton({
   return (
     <>
       <button
-        className={styles.toolbarButton}
+        className={compact ? styles.navbarButton : styles.toolbarButton}
         onClick={handleClick}
         disabled={disabled}
         type="button"
         aria-label="Personalize content for your background"
       >
-        <span className={styles.buttonIcon}>🎯</span>
-        <span className={styles.buttonText}>
+        <span className={compact ? styles.navbarButtonIcon : styles.buttonIcon}>🎯</span>
+        <span className={compact ? styles.navbarButtonText : styles.buttonText}>
           {hasBackground ? `Personalize (${background})` : 'Personalize'}
         </span>
       </button>

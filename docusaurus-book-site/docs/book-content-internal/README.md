@@ -1,3 +1,8 @@
+---
+displayed_sidebar: null
+sidebar_class_name: hidden
+---
+
 # Book Content - Authoring Guidelines
 
 This directory contains all the content for the "Physical AI & Humanoid Robotics" book. It is structured to be modular, maintainable, and compatible with static-site generators like Docusaurus (though Docusaurus integration is handled downstream).

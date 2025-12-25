@@ -29,6 +29,11 @@ function getContentContainer(): HTMLElement | null {
   return null;
 }
 
+interface ChapterToolbarProps {
+  /** When true, renders compact buttons without container (for navbar) */
+  compact?: boolean;
+}
+
 /**
  * ChapterToolbar Component
  *
@@ -38,7 +43,7 @@ function getContentContainer(): HTMLElement | null {
  *
  * Manages the transformation state and content display.
  */
-export default function ChapterToolbar(): JSX.Element {
+export default function ChapterToolbar({ compact = false }: ChapterToolbarProps): JSX.Element {
   const [transformState, setTransformState] = useState<TransformationState>(
     INITIAL_TRANSFORMATION_STATE
   );
@@ -242,35 +247,62 @@ export default function ChapterToolbar(): JSX.Element {
   const isProcessing = transformState.status === 'loading' || transformState.status === 'streaming';
   const showRestoreButton = transformState.showInline && (transformState.status === 'streaming' || transformState.status === 'complete');
 
+  const buttons = (
+    <>
+      <PersonalizeButton
+        onTransformStart={handleTransformStart}
+        onContentChunk={handleContentChunk}
+        onTransformComplete={handleTransformComplete}
+        onTransformError={handleTransformError}
+        disabled={isProcessing}
+        compact={compact}
+      />
+      {showRestoreButton ? (
+        <button
+          className={compact ? styles.navbarButton : `${styles.toolbarButton} ${styles.restoreButton}`}
+          onClick={handleShowOriginal}
+          type="button"
+        >
+          <span className={compact ? styles.navbarButtonIcon : styles.buttonIcon}>↩️</span>
+          <span className={compact ? styles.navbarButtonText : styles.buttonText}>Show Original</span>
+        </button>
+      ) : (
+        <TranslateButton
+          onTransformStart={handleTransformStart}
+          onContentChunk={handleContentChunk}
+          onTransformComplete={handleTransformComplete}
+          onTransformError={handleTransformError}
+          disabled={isProcessing}
+          compact={compact}
+        />
+      )}
+    </>
+  );
+
+  // Compact mode: render buttons directly without container (for navbar)
+  if (compact) {
+    return (
+      <>
+        <div className={styles.navbarToolbar}>
+          {buttons}
+        </div>
+        {transformState.showOverlay && (
+          <ContentOverlay
+            state={transformState}
+            onClose={handleCloseOverlay}
+            onRetry={handleRetry}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Full mode: render with container styling
   return (
     <>
       <div className={styles.toolbar}>
         <div className={styles.toolbarContent}>
-          <PersonalizeButton
-            onTransformStart={handleTransformStart}
-            onContentChunk={handleContentChunk}
-            onTransformComplete={handleTransformComplete}
-            onTransformError={handleTransformError}
-            disabled={isProcessing}
-          />
-          {showRestoreButton ? (
-            <button
-              className={`${styles.toolbarButton} ${styles.restoreButton}`}
-              onClick={handleShowOriginal}
-              type="button"
-            >
-              <span className={styles.buttonIcon}>↩️</span>
-              <span className={styles.buttonText}>Show Original</span>
-            </button>
-          ) : (
-            <TranslateButton
-              onTransformStart={handleTransformStart}
-              onContentChunk={handleContentChunk}
-              onTransformComplete={handleTransformComplete}
-              onTransformError={handleTransformError}
-              disabled={isProcessing}
-            />
-          )}
+          {buttons}
         </div>
       </div>
 

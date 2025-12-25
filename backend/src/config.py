@@ -55,6 +55,13 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = None
     CLAUDE_API_KEY: Optional[str] = None
 
+    # Auth Configuration
+    AUTH_SECRET_KEY: str = "your-secret-key-min-32-characters-long-change-in-production"
+    AUTH_SESSION_DURATION_DAYS: int = 7
+    AUTH_COOKIE_SECURE: bool = False  # Set to True in production (requires HTTPS)
+    AUTH_COOKIE_SAMESITE: str = "lax"  # "lax", "strict", or "none"
+    AUTH_COOKIE_NAME: str = "session_token"
+
     # Pydantic settings configuration
     model_config = SettingsConfigDict(
         env_file=".env", 
