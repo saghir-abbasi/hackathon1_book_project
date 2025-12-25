@@ -57,7 +57,7 @@ const config: Config = {
           path: "./docs/book-content-internal",
           routeBasePath: "/book",
           editUrl: undefined,
-          exclude: ["shared/templates/**/*.mdx"],
+          exclude: ["shared/templates/**/*.mdx", "README.md"],
         },
         blog: {
           showReadingTime: true,
@@ -85,65 +85,51 @@ const config: Config = {
       defaultMode: "dark",
     },
     navbar: {
-      title: "My Site",
+      title: "Physical AI & Robotics",
       logo: {
-        alt: "My Site Logo",
+        alt: "Physical AI & Robotics Logo",
         src: "img/logo.svg",
       },
       items: [
-        {
-          type: "docSidebar",
-          sidebarId: "defaultSidebar",
-          position: "left",
-          label: "Book",
-        },
-        { to: "/blog", label: "Blog", position: "left" },
-        {
-          href: "https://github.com/facebook/docusaurus",
-          label: "GitHub",
-          position: "right",
-        },
+        // Navigation items removed - using custom navbar with auth
       ],
     },
     footer: {
       style: "dark",
       links: [
         {
-          title: "Docs",
-          items: [],
+          title: "Book",
+          items: [
+            {
+              label: "Start Reading",
+              to: "/book/modules/module-1-robotic-nervous-system/chapter-1-ros2-basics",
+            },
+          ],
         },
         {
           title: "Community",
           items: [
             {
               label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              href: "https://stackoverflow.com/questions/tagged/robotics",
             },
             {
               label: "Discord",
               href: "https://discordapp.com/invite/docusaurus",
             },
-            {
-              label: "X",
-              href: "https://x.com/docusaurus",
-            },
           ],
         },
         {
-          title: "More",
+          title: "Resources",
           items: [
             {
-              label: "Blog",
-              to: "/blog",
-            },
-            {
-              label: "GitHub",
-              href: "https://github.com/facebook/docusaurus",
+              label: "ROS2 Documentation",
+              href: "https://docs.ros.org/en/humble/",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Saghir Abbasi. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

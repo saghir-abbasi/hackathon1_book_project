@@ -1,0 +1,288 @@
+openapi: 3.0.3
+info:
+  title: Better Auth API
+  description: Authentication API for the Book Project with user background preferences
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api/auth
+    description: Local development server
+  - url: https://book-project-backend.vercel.app/api/auth
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication operations
+  - name: User
+    description: User profile operations
+
+paths:
+  /signup:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Create a new user account with email, password, and background preference
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '201':
+          description: User created successfully
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Session cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /signin:
+    post:
+      tags:
+        - Authentication
+      summary: Sign in an existing user
+      description: Authenticate user with email and password
+      operationId: signin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Successfully authenticated
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Session cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /signout:
+    post:
+      tags:
+        - Authentication
+      summary: Sign out current user
+      description: Invalidate the current session
+      operationId: signout
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Successfully signed out
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Cleared session cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Successfully signed out"
+
+  /session:
+    get:
+      tags:
+        - Authentication
+      summary: Get current session
+      description: Check if user is authenticated and get user data
+      operationId: getSession
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Session information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+
+  /user/preference:
+    get:
+      tags:
+        - User
+      summary: Get user background preference
+      description: Get the authenticated user's background preference
+      operationId: getPreference
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: User preference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreferenceResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - User
+      summary: Update user background preference
+      description: Update the authenticated user's background preference
+      operationId: updatePreference
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePreferenceRequest'
+      responses:
+        '200':
+          description: Preference updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreferenceResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: session
+
+  schemas:
+    BackgroundType:
+      type: string
+      enum:
+        - software
+        - hardware
+      description: User's professional background
+
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+        - background
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          minLength: 8
+          example: "securepassword123"
+        background:
+          $ref: '#/components/schemas/BackgroundType'
+
+    SignInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          example: "securepassword123"
+
+    UpdatePreferenceRequest:
+      type: object
+      required:
+        - background
+      properties:
+        background:
+          $ref: '#/components/schemas/BackgroundType'
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        background:
+          $ref: '#/components/schemas/BackgroundType'
+        created_at:
+          type: string
+          format: date-time
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserResponse'
+        message:
+          type: string
+          example: "Successfully signed in"
+
+    SessionResponse:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/UserResponse'
+
+    PreferenceResponse:
+      type: object
+      properties:
+        background:
+          $ref: '#/components/schemas/BackgroundType'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "AUTH_INVALID_CREDENTIALS"
+            message:
+              type: string
+              example: "Invalid email or password"

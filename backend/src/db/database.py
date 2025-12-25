@@ -33,6 +33,7 @@ def create_db_and_tables():
     """
     # Import models here to ensure they are registered with Base
     from ..models import db_models # pylint: disable=unused-import, import-outside-toplevel
+    from ..auth import models as auth_models # pylint: disable=unused-import, import-outside-toplevel
     print("Attempting to create database tables...")
     Base.metadata.create_all(bind=engine)
     print("Database tables created (if they didn't exist).")

@@ -29,7 +29,12 @@ app.add_middleware(AgentSecurityMiddleware)
 
 @app.on_event("startup")
 async def startup_event():
-    # Placeholder for database connection, Qdrant client initialization etc.
+    # Create database tables (including auth tables)
+    from .db.database import create_db_and_tables
+    try:
+        create_db_and_tables()
+    except Exception as e:
+        print(f"Warning: Could not create database tables: {e}")
     print("Application startup complete.")
 
 
@@ -67,8 +72,10 @@ async def favicon_png():
 
 # Include routers here as they are developed
 from .api import chat_router, embed_router, query_router
+from .auth.router import router as auth_router
 
 app.include_router(embed_router.router, prefix="/embed", tags=["Embeddings"])
 app.include_router(query_router.router, prefix="/query", tags=["Query"])
 app.include_router(chat_router.router, prefix="/chat", tags=["Chatbot"])
 app.include_router(agent_router, prefix="/api", tags=["Agent"])
+app.include_router(auth_router, tags=["Authentication"])  # Auth router has /api/auth prefix built-in

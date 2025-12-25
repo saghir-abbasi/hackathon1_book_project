@@ -72,6 +72,7 @@ export default function TranslateButton({
   onTransformComplete,
   onTransformError,
   disabled = false,
+  compact = false,
 }: TranslateButtonProps): JSX.Element {
   const agentBridgeRef = useRef<AgentBridge | null>(null);
 
@@ -132,15 +133,15 @@ export default function TranslateButton({
 
   return (
     <button
-      className={`${styles.toolbarButton} ${styles.translateButton}`}
+      className={compact ? `${styles.navbarButton} ${styles.navbarTranslateButton}` : `${styles.toolbarButton} ${styles.translateButton}`}
       onClick={handleClick}
       disabled={disabled}
       type="button"
       aria-label="Translate content to Urdu"
       dir="rtl"
     >
-      <span className={styles.buttonIcon}>🌐</span>
-      <span className={styles.buttonText}>اردو میں ترجمہ</span>
+      <span className={compact ? styles.navbarButtonIcon : styles.buttonIcon}>🌐</span>
+      <span className={compact ? styles.navbarButtonText : styles.buttonText}>اردو میں ترجمہ</span>
     </button>
   );
 }

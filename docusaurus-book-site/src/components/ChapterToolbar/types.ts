@@ -87,6 +87,8 @@ export interface PersonalizeButtonProps {
   onTransformComplete: () => void;
   onTransformError: (error: string) => void;
   disabled?: boolean;
+  /** When true, renders compact style for navbar */
+  compact?: boolean;
 }
 
 /**
@@ -98,6 +100,8 @@ export interface TranslateButtonProps {
   onTransformComplete: () => void;
   onTransformError: (error: string) => void;
   disabled?: boolean;
+  /** When true, renders compact style for navbar */
+  compact?: boolean;
 }
 
 /**
